@@ -1,0 +1,90 @@
+[
+  {
+    "id": 1,
+    "full_name": "Budi Santoso",
+    "nim": "2502000001",
+    "email": "budi@binus.ac.id",
+    "line_id": "budi_san",
+    "event_id": 1,
+    "event_title": "UI/UX Workshop: Design Thinking",
+    "registered_at": "2026-08-01T14:30:00",
+    "status": "confirmed"
+  },
+  {
+    "id": 2,
+    "full_name": "Siti Rahmawati",
+    "nim": "2502000002",
+    "email": "siti@binus.ac.id",
+    "line_id": "siti_rmw",
+    "event_id": 1,
+    "event_title": "UI/UX Workshop: Design Thinking",
+    "registered_at": "2026-08-02T09:15:00",
+    "status": "confirmed"
+  },
+  {
+    "id": 3,
+    "full_name": "Ahmad Fauzi",
+    "nim": "2502000003",
+    "email": "ahmad@binus.ac.id",
+    "line_id": "ahmad_fz",
+    "event_id": 3,
+    "event_title": "Tech Talk: AI in Everyday Life",
+    "registered_at": "2026-08-05T11:00:00",
+    "status": "pending"
+  },
+  {
+    "id": 4,
+    "full_name": "Dewi Lestari",
+    "nim": "2502000004",
+    "email": "dewi@binus.ac.id",
+    "line_id": "dewi_lst",
+    "event_id": 2,
+    "event_title": "Competitive Programming Bootcamp",
+    "registered_at": "2026-08-03T16:45:00",
+    "status": "attended"
+  },
+  {
+    "id": 5,
+    "full_name": "Rizky Pratama",
+    "nim": "2502000005",
+    "email": "rizky@binus.ac.id",
+    "line_id": "rizky_ptr",
+    "event_id": 4,
+    "event_title": "Mobile Development with Flutter",
+    "registered_at": "2026-08-07T08:30:00",
+    "status": "pending"
+  },
+  {
+    "id": 6,
+    "full_name": "Nina Kartika",
+    "nim": "2502000006",
+    "email": "nina@binus.ac.id",
+    "line_id": "nina_ktk",
+    "event_id": 5,
+    "event_title": "Cybersecurity Fundamentals",
+    "registered_at": "2026-08-10T10:00:00",
+    "status": "confirmed"
+  },
+  {
+    "id": 7,
+    "full_name": "Hendra Wijaya",
+    "nim": "2502000007",
+    "email": "hendra@binus.ac.id",
+    "line_id": "hendra_wjy",
+    "event_id": 3,
+    "event_title": "Tech Talk: AI in Everyday Life",
+    "registered_at": "2026-08-06T13:20:00",
+    "status": "cancelled"
+  },
+  {
+    "id": 8,
+    "full_name": "Sarah Putri",
+    "nim": "2502000008",
+    "email": "sarah@binus.ac.id",
+    "line_id": "sarah_ptr",
+    "event_id": 6,
+    "event_title": "Data Science & Machine Learning",
+    "registered_at": "2026-08-09T15:00:00",
+    "status": "pending"
+  }
+]
