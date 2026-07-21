@@ -2,12 +2,13 @@ import { cn } from '../utils/cn'
 
 export default function Badge({ children, variant = 'default', className }) {
   const variants = {
-    default: 'bg-slate-800 text-slate-300',
-    primary: 'bg-blue-500/15 text-blue-400',
-    success: 'bg-emerald-500/15 text-emerald-400',
-    warning: 'bg-amber-500/15 text-amber-400',
-    danger: 'bg-red-500/15 text-red-400',
-    info: 'bg-cyan-500/15 text-cyan-400',
+    default: 'bg-zinc-800 text-zinc-300',
+    primary: 'bg-white/10 text-white',
+    success: 'bg-emerald-500/10 text-emerald-300',
+    warning: 'bg-amber-500/10 text-amber-300',
+    danger: 'bg-red-500/10 text-red-300',
+    info: 'bg-sky-500/10 text-sky-300',
+    zinc: 'bg-zinc-800/80 text-zinc-400',
   }
 
   return (

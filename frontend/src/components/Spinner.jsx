@@ -2,7 +2,7 @@ export default function Spinner({ className }) {
   return (
     <div className={className}>
       <svg
-        className="animate-spin h-5 w-5 text-blue-400"
+        className="animate-spin h-5 w-5 text-zinc-400"
         fill="none"
         viewBox="0 0 24 24"
       >
@@ -20,6 +20,14 @@ export default function Spinner({ className }) {
           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
         />
       </svg>
+    </div>
+  )
+}
+
+export function PageSpinner() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <Spinner />
     </div>
   )
 }
