@@ -1,6 +1,6 @@
 # HIMTI Registration App
 
-Portal registrasi acara digital untuk HIMTI BINUS University. Sistem tervalidasi, interaktif, dan modern — menggantikan Google Forms sebagai platform pendaftaran acara resmi himpunan.
+Digital event registration portal for HIMTI BINUS University. A validated, interactive, and modern system replacing Google Forms as the official event registration platform.
 
 ## Tech Stack
 
