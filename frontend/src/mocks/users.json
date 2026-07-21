@@ -1,0 +1,35 @@
+{
+  "status": "ok",
+  "data": [
+    {
+      "id": 1,
+      "email": "admin@himti.id",
+      "password": "admin123",
+      "name": "Admin HIMTI",
+      "nim": "2502000001",
+      "phone": "081234567890",
+      "role": "admin",
+      "avatar": null
+    },
+    {
+      "id": 2,
+      "email": "mahasiswa@binus.ac.id",
+      "password": "user123",
+      "name": "Budi Santoso",
+      "nim": "2502000002",
+      "phone": "081234567891",
+      "role": "user",
+      "avatar": null
+    },
+    {
+      "id": 3,
+      "email": "siti@binus.ac.id",
+      "password": "user123",
+      "name": "Siti Rahmawati",
+      "nim": "2502000003",
+      "phone": "081234567892",
+      "role": "user",
+      "avatar": null
+    }
+  ]
+}
