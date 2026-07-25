@@ -92,7 +92,7 @@ export default function UserDashboard() {
                       {statusLabel[reg.status]?.label}
                     </Badge>
                     <Link
-                      to={`/register/${reg.event_id}`}
+                      to={`/events/${reg.event_id}`}
                       className="text-xs text-zinc-400 hover:text-white transition-colors"
                     >
                       View
