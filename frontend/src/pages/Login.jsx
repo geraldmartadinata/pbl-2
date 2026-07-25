@@ -64,7 +64,7 @@ export default function Login() {
             <Input
               label="Email"
               name="email"
-              type="text"
+              type="email"
               placeholder="you@binus.ac.id"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
