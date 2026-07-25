@@ -4,6 +4,7 @@ import { useToast } from '../contexts/ToastContext'
 import Card from '../components/Card'
 import Input from '../components/Input'
 import Button from '../components/Button'
+import BackButton from '../components/BackButton'
 import { User, Mail, Shield, Save } from 'lucide-react'
 
 export default function Profile() {
@@ -31,6 +32,7 @@ export default function Profile() {
       </div>
 
       <div className="relative z-10 max-w-2xl mx-auto px-4 py-12">
+        <BackButton to="/dashboard" label="Back to My Registrations" />
         <h1 className="text-2xl font-bold text-white mb-8">Profile</h1>
 
         <div className="space-y-4">

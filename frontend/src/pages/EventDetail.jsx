@@ -6,7 +6,8 @@ import Card from '../components/Card'
 import Badge from '../components/Badge'
 import Button from '../components/Button'
 import Spinner from '../components/Spinner'
-import { CalendarDays, MapPin, Clock, Users, ArrowLeft, Ticket } from 'lucide-react'
+import BackButton from '../components/BackButton'
+import { CalendarDays, MapPin, Clock, Users, Ticket } from 'lucide-react'
 
 export default function EventDetail() {
   const { id } = useParams()
@@ -36,13 +37,7 @@ export default function EventDetail() {
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-12">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-300 transition-colors mb-6"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to events
-        </Link>
+        <BackButton to="/" label="Back to events" />
 
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Main content */}

@@ -6,6 +6,7 @@ import { formatDate } from '../utils/format'
 import Card from '../components/Card'
 import Badge from '../components/Badge'
 import { PageSpinner } from '../components/Spinner'
+import BackButton from '../components/BackButton'
 import { CalendarDays, Ticket, ArrowRight } from 'lucide-react'
 
 const statusLabel = {
@@ -42,6 +43,7 @@ export default function UserDashboard() {
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-12">
+        <BackButton to="/" label="Back to Dashboard" />
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-white">My Registrations</h1>
           <p className="text-sm text-zinc-500 mt-1">

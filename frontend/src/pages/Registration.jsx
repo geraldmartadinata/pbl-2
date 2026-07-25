@@ -7,7 +7,8 @@ import Card from '../components/Card'
 import Input from '../components/Input'
 import Button from '../components/Button'
 import Spinner from '../components/Spinner'
-import { CalendarDays, MapPin, CheckCircle2, ArrowLeft, Clock } from 'lucide-react'
+import BackButton from '../components/BackButton'
+import { CalendarDays, MapPin, CheckCircle2, Clock } from 'lucide-react'
 
 const DRAFT_KEY = 'reg_draft'
 const initialForm = { full_name: '', nim: '', email: '', line_id: '' }
@@ -88,10 +89,7 @@ export default function Registration() {
       </div>
 
       <div className="relative z-10 max-w-2xl mx-auto px-4 py-12">
-        <button onClick={() => navigate('/')} className="flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-300 transition-colors mb-6">
-          <ArrowLeft className="h-4 w-4" />
-          Back to events
-        </button>
+        <BackButton to="/" label="Back to events" />
 
         {success ? (
           <Card className="p-11 text-center animate-fade-in">
