@@ -210,7 +210,7 @@ export default function Landing() {
               {urgentEvents.map((event, i) => {
                 const dl = daysLeft(event.closing_date)
                 return (
-                  <RouterLink key={event.id} to={`/register/${event.id}`}>
+                  <RouterLink key={event.id} to={`/events/${event.id}`}>
                     <Card
                       className={`p-6 h-full flex flex-col hover:border-white/[15%] transition-all duration-300 group cursor-pointer border-l-2 ${categoryStyles[event.category] || 'border-l-white/10'}`}
                     >
