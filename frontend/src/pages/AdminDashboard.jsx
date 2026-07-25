@@ -6,7 +6,7 @@ import Button from '../components/Button'
 import { PageSpinner } from '../components/Spinner'
 import Sidebar from '../components/Sidebar'
 import { useToast } from '../contexts/ToastContext'
-import { Search, Users, CheckCircle, Clock, UserCheck } from 'lucide-react'
+import { Search, Users, CheckCircle, Clock, UserCheck, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const statusConfig = {
   confirmed: { label: 'Confirmed', variant: 'success' },
@@ -19,8 +19,10 @@ export default function AdminDashboard() {
   const [participants, setParticipants] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [page, setPage] = useState(1)
   const [checkingId, setCheckingId] = useState(null)
   const toast = useToast()
+  const PAGE_SIZE = 5
 
   useEffect(() => {
     getAllParticipants()
@@ -49,6 +51,9 @@ export default function AdminDashboard() {
       p.event_title.toLowerCase().includes(q)
     )
   })
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const safePage = Math.min(page, totalPages)
+  const paginated = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE)
 
   const stats = [
     { label: 'Total', count: participants.length, icon: Users, color: 'text-zinc-300' },
@@ -94,7 +99,7 @@ export default function AdminDashboard() {
                   type="text"
                   placeholder="Search name, NIM, event..."
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => { setSearch(e.target.value); setPage(1) }}
                   className="block w-full rounded-xl bg-zinc-900/80 border border-zinc-700/50 pl-9 pr-3 py-2 text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/10 focus:border-white/20 transition-colors"
                 />
               </div>
@@ -117,7 +122,7 @@ export default function AdminDashboard() {
                       <td colSpan={5} className="px-4 py-12 text-center text-zinc-500">No participants found</td>
                     </tr>
                   ) : (
-                    filtered.map((p) => (
+                    paginated.map((p) => (
                       <tr key={p.id} className="hover:bg-white/[2%] transition-colors">
                         <td className="px-4 py-3.5">
                           <p className="text-white font-medium">{p.full_name}</p>
@@ -147,8 +152,31 @@ export default function AdminDashboard() {
                 </tbody>
               </table>
             </div>
-            <div className="px-4 py-3 border-t border-white/[6%] text-xs text-zinc-600">
-              Showing {filtered.length} of {participants.length} participants
+            <div className="px-4 py-3 border-t border-white/[6%] flex items-center justify-between text-xs text-zinc-600">
+              <span>
+                {filtered.length === 0
+                  ? 'No participants'
+                  : `Showing ${(safePage - 1) * PAGE_SIZE + 1}–${Math.min(safePage * PAGE_SIZE, filtered.length)} of ${filtered.length}`}
+              </span>
+              {totalPages > 1 && (
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setPage(safePage - 1)}
+                    disabled={safePage <= 1}
+                    className="p-1.5 rounded-lg hover:bg-white/[6%] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  <span className="text-zinc-500">{safePage} / {totalPages}</span>
+                  <button
+                    onClick={() => setPage(safePage + 1)}
+                    disabled={safePage >= totalPages}
+                    className="p-1.5 rounded-lg hover:bg-white/[6%] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
             </div>
           </Card>
         </div>
