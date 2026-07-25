@@ -7,9 +7,9 @@ import {
   Users,
   Calendar,
   LogOut,
-  Menu,
-  X,
-  ChevronDown,
+  ChevronLeft,
+  PanelLeftClose,
+  PanelLeft,
 } from 'lucide-react'
 
 const links = [
@@ -19,10 +19,9 @@ const links = [
 ]
 
 export default function Sidebar() {
-  const { user, logout } = useAuth()
+  const { logout } = useAuth()
   const navigate = useNavigate()
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const [userOpen, setUserOpen] = useState(false)
+  const [collapsed, setCollapsed] = useState(true)
 
   const handleLogout = () => {
     logout()
@@ -31,85 +30,59 @@ export default function Sidebar() {
 
   const linkClass = ({ isActive }) =>
     cn(
-      'flex items-center gap-3 px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200',
+      'flex items-center gap-3 px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 whitespace-nowrap',
       isActive
         ? 'text-white bg-white/10 border border-white/[6%]'
         : 'text-zinc-400 hover:text-white hover:bg-white/[4%]'
     )
 
   return (
-    <>
-      {/* Mobile top bar */}
-      <div className="lg:hidden sticky top-0 z-50 border-b border-white/[7%] bg-zinc-950/95">
-        <div className="flex items-center justify-between px-4 h-14">
-          <Link to="/admin" className="flex items-center gap-2.5">
-            <img src="/images/himti-icon.svg" alt="HIMTI" className="w-7 h-7 object-contain" />
-            <span className="font-semibold text-white">HIMTI Admin</span>
-          </Link>
+    <aside
+      className={cn(
+        'hidden lg:flex flex-col bg-zinc-900/50 border-r border-white/[6%] min-h-[calc(100vh-4rem)] transition-all duration-300',
+        collapsed ? 'w-16' : 'w-64'
+      )}
+    >
+      <div className={cn('p-4 flex-1', collapsed && 'items-center')}>
+        <div className={cn('flex', collapsed ? 'justify-center' : 'items-center justify-between')}>
+          {!collapsed && (
+            <Link to="/admin" className="flex items-center gap-2.5">
+              <img src="/images/himti-icon.svg" alt="HIMTI" className="w-7 h-7 object-contain" />
+              <span className="font-semibold text-white">Admin</span>
+            </Link>
+          )}
           <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-2 text-zinc-400 hover:text-white"
+            onClick={() => setCollapsed(!collapsed)}
+            className="p-1.5 text-zinc-500 hover:text-white rounded-lg hover:bg-white/[6%] transition-all"
+            title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {collapsed ? <PanelLeft className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
           </button>
         </div>
-        {mobileOpen && (
-          <div className="px-3 pb-3 space-y-1 animate-slide-in">
-            {links.map((l) => (
-              <NavLink
-                key={l.to}
-                to={l.to}
-                end={l.exact}
-                onClick={() => setMobileOpen(false)}
-                className={linkClass}
-              >
-                <l.icon className="h-4 w-4" />
-                {l.label}
-              </NavLink>
-            ))}
-            <div className="border-t border-white/[6%] pt-2 mt-2">
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-3 px-3.5 py-2.5 text-sm text-zinc-400 hover:text-red-300 rounded-xl hover:bg-red-500/10 transition-all w-full"
-              >
-                <LogOut className="h-4 w-4" />
-                Logout
-              </button>
-            </div>
-          </div>
-        )}
+
+        <nav className={cn('space-y-1', collapsed ? 'mt-6 flex flex-col items-center' : 'mt-6')}>
+          {links.map((l) => (
+            <NavLink key={l.to} to={l.to} end={l.exact} className={linkClass}>
+              <l.icon className="h-4 w-4 shrink-0" />
+              {!collapsed && l.label}
+            </NavLink>
+          ))}
+        </nav>
       </div>
 
-      {/* Desktop sidebar */}
-      <aside className="hidden lg:flex flex-col w-64 bg-zinc-900/50 backdrop-blur-2xl border-r border-white/[6%] min-h-screen">
-        <div className="p-6">
-          <Link to="/admin" className="flex items-center gap-2.5 mb-8">
-            <img src="/images/himti-icon.svg" alt="HIMTI" className="w-8 h-8 object-contain" />
-            <span className="font-semibold text-white text-lg tracking-tight">
-              HIMTI
-            </span>
-          </Link>
-
-          <nav className="space-y-1">
-            {links.map((l) => (
-              <NavLink key={l.to} to={l.to} end={l.exact} className={linkClass}>
-                <l.icon className="h-4 w-4" />
-                {l.label}
-              </NavLink>
-            ))}
-          </nav>
-        </div>
-
-        <div className="mt-auto p-6 border-t border-white/[6%]">
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-3 text-sm text-zinc-500 hover:text-zinc-300 transition-colors w-full"
-          >
-            <LogOut className="h-4 w-4" />
-            Logout
-          </button>
-        </div>
-      </aside>
-    </>
+      <div className={cn('p-4 border-t border-white/[6%]', collapsed && 'flex justify-center')}>
+        <button
+          onClick={handleLogout}
+          className={cn(
+            'flex items-center gap-3 text-sm text-zinc-500 hover:text-zinc-300 transition-colors',
+            collapsed ? 'p-2' : 'w-full'
+          )}
+          title="Logout"
+        >
+          <LogOut className="h-4 w-4 shrink-0" />
+          {!collapsed && 'Logout'}
+        </button>
+      </div>
+    </aside>
   )
 }

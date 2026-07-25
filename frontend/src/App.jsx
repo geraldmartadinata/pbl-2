@@ -80,9 +80,9 @@ export default function App() {
             }
           />
 
-          {/* Admin — no top navbar, has sidebar */}
-          <Route path="/admin" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
-          <Route path="/admin/*" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
+          {/* Admin — top navbar + collapsible sidebar */}
+          <Route path="/admin" element={<ProtectedRoute adminOnly><Navbar /><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/admin/*" element={<ProtectedRoute adminOnly><Navbar /><AdminDashboard /></ProtectedRoute>} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
-import { getAllParticipants, toggleCheckIn } from '../services/api'
+import { useLocation, NavLink } from 'react-router-dom'
+import { getAllParticipants, toggleCheckIn, getEvents } from '../services/api'
 import Card from '../components/Card'
 import Badge from '../components/Badge'
 import Button from '../components/Button'
 import { PageSpinner } from '../components/Spinner'
 import Sidebar from '../components/Sidebar'
 import { useToast } from '../contexts/ToastContext'
-import { Search, Users, CheckCircle, Clock, UserCheck, ChevronLeft, ChevronRight } from 'lucide-react'
+import { cn } from '../utils/cn'
+import { Search, Users, CheckCircle, Clock, UserCheck, ChevronLeft, ChevronRight, LayoutDashboard, Calendar } from 'lucide-react'
 
 const statusConfig = {
   confirmed: { label: 'Confirmed', variant: 'success' },
@@ -15,8 +17,16 @@ const statusConfig = {
   cancelled: { label: 'Cancelled', variant: 'danger' },
 }
 
+const adminTabs = [
+  { to: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/admin/participants', label: 'Participants', icon: Users },
+  { to: '/admin/events', label: 'Events', icon: Calendar },
+]
+
 export default function AdminDashboard() {
+  const { pathname } = useLocation()
   const [participants, setParticipants] = useState([])
+  const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
@@ -25,8 +35,11 @@ export default function AdminDashboard() {
   const PAGE_SIZE = 5
 
   useEffect(() => {
-    getAllParticipants()
-      .then(setParticipants)
+    Promise.all([getAllParticipants(), getEvents()])
+      .then(([p, e]) => {
+        setParticipants(p)
+        setEvents(e)
+      })
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
@@ -41,6 +54,10 @@ export default function AdminDashboard() {
       setCheckingId(null)
     }
   }
+
+  const tabLabel = adminTabs.find((t) =>
+    t.to === '/admin' ? pathname === '/admin' : pathname.startsWith(t.to)
+  )?.label || 'Admin'
 
   const filtered = participants.filter((p) => {
     if (!search) return true
@@ -64,34 +81,65 @@ export default function AdminDashboard() {
 
   if (loading) return <PageSpinner />
 
+  const isEventsTab = pathname.startsWith('/admin/events')
+  const isParticipantsTab = pathname.startsWith('/admin/participants') || pathname === '/admin'
+
   return (
-    <div className="min-h-screen bg-zinc-950 flex">
+    <div className="min-h-[calc(100vh-4rem)] bg-zinc-950 flex">
       <Sidebar />
 
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 overflow-auto">
         <div className="p-6 lg:p-8">
+
+          {/* Mobile tab bar */}
+          <div className="lg:hidden flex border-b border-white/[6%] mb-6 -mx-6 px-6">
+            {adminTabs.map((t) => {
+              const isActive = t.to === '/admin' ? pathname === '/admin' : pathname.startsWith(t.to)
+              return (
+                <NavLink
+                  key={t.to}
+                  to={t.to}
+                  end={t.to === '/admin'}
+                  className={cn(
+                    'flex items-center gap-2 px-4 py-3 text-sm border-b-2 transition-colors -mb-[1px]',
+                    isActive
+                      ? 'text-white border-white'
+                      : 'text-zinc-500 border-transparent hover:text-zinc-300'
+                  )}
+                >
+                  <t.icon className="h-4 w-4" />
+                  {t.label}
+                </NavLink>
+              )
+            })}
+          </div>
+
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
-            <p className="text-sm text-zinc-500 mt-1">Manage participants and check-ins</p>
+            <h1 className="text-2xl font-bold text-white">{tabLabel}</h1>
+            <p className="text-sm text-zinc-500 mt-1">
+              {isEventsTab ? 'View and manage events' : 'Manage participants and check-ins'}
+            </p>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {stats.map((s) => (
-              <Card key={s.label} className="p-4 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-white/[6%] flex items-center justify-center">
-                  <s.icon className={`h-5 w-5 ${s.color}`} />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-white">{s.count}</p>
-                  <p className="text-xs text-zinc-500">{s.label}</p>
-                </div>
-              </Card>
-            ))}
-          </div>
-
-          {/* Table */}
-          <Card className="overflow-hidden">
+          {isEventsTab ? (
+            /* ── Events View ── */
+            <div className="space-y-4">
+              {events.map((evt) => (
+                <Card key={evt.id} className="p-5 flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-semibold text-white">{evt.title}</h3>
+                    <p className="text-xs text-zinc-500 mt-1">
+                      {evt.date} &middot; {evt.registered}/{evt.capacity} registered
+                    </p>
+                  </div>
+                  <Badge variant={evt.category === 'workshop' ? 'info' : evt.category === 'seminar' ? 'success' : 'warning'}>
+                    {evt.category}
+                  </Badge>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <Card className="overflow-hidden">
             <div className="p-4 border-b border-white/[6%]">
               <div className="relative max-w-xs">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
@@ -179,6 +227,7 @@ export default function AdminDashboard() {
               )}
             </div>
           </Card>
+          )}
         </div>
       </div>
     </div>
