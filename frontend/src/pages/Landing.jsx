@@ -16,7 +16,7 @@ import {
   Sparkles,
   GraduationCap,
   Globe,
-  Link as LinkIcon,
+  ExternalLink,
   Mail,
 } from 'lucide-react'
 
@@ -375,24 +375,24 @@ export default function Landing() {
                 <h4 className="text-sm font-semibold text-white mb-4">
                   Follow Us
                 </h4>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col gap-2">
                   <a
-                    href="#"
-                    className="w-9 h-9 rounded-xl bg-white/5 border border-white/[6%] flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all"
+                    href="https://instagram.com/himtibinus"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors"
                   >
-                    <LinkIcon className="h-4 w-4" />
+                    <ExternalLink className="h-3.5 w-3.5 text-zinc-600 shrink-0" />
+                    Instagram
                   </a>
                   <a
-                    href="#"
-                    className="w-9 h-9 rounded-xl bg-white/5 border border-white/[6%] flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all"
+                    href="https://linkedin.com/company/himtibinus"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors"
                   >
-                    <Globe className="h-4 w-4" />
-                  </a>
-                  <a
-                    href="#"
-                    className="w-9 h-9 rounded-xl bg-white/5 border border-white/[6%] flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all"
-                  >
-                    <Globe className="h-4 w-4" />
+                    <ExternalLink className="h-3.5 w-3.5 text-zinc-600 shrink-0" />
+                    LinkedIn
                   </a>
                 </div>
               </div>
