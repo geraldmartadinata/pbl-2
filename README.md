@@ -1,16 +1,16 @@
-# HIMTI Registration App
+# HIMTI Event Portal
 
-Digital event registration portal for HIMTI BINUS University. A validated, interactive, and modern system replacing Google Forms as the official event registration platform.
+Digital event registration portal for HIMTI BINUS University. Premium dark mode UI built with React 19, Vite 8, and Tailwind CSS 4.
 
 ## Tech Stack
 
-| Layer       | Technology                        |
-|-------------|-----------------------------------|
-| Frontend    | React 19, Vite 8, Tailwind CSS 4  |
-| Routing     | React Router DOM v7               |
-| HTTP        | Axios / Fetch                     |
-| Backend     | Express.js, JWT                   |
-| Database    | PostgreSQL                        |
+| Layer       | Technology                       |
+|-------------|----------------------------------|
+| Frontend    | React 19, Vite 8, Tailwind CSS 4 |
+| Routing     | React Router DOM v7              |
+| Icons       | lucide-react                     |
+| Backend     | Express.js, JWT (TBD)            |
+| Database    | PostgreSQL (TBD)                 |
 
 ## Project Structure
 
@@ -18,36 +18,28 @@ Digital event registration portal for HIMTI BINUS University. A validated, inter
 pbl-2/
 ├── frontend/               # React application
 │   ├── src/
-│   │   ├── components/     # Reusable UI components (Button, Input, Modal, Card, etc.)
-│   │   ├── contexts/       # React context providers (Auth, Toast)
-│   │   ├── mocks/          # Mock JSON data for development
-│   │   ├── pages/          # Page-level components
-│   │   ├── services/       # API communication layer
-│   │   └── utils/          # Helper functions (formatting, validation)
+│   │   ├── components/     # Button, Input, Card, Badge, Navbar, Sidebar, Spinner
+│   │   ├── contexts/       # AuthContext (dummy auth with localStorage)
+│   │   ├── mocks/          # events.json, participants.json
+│   │   ├── pages/          # Landing, Login, Registration, AdminDashboard
+│   │   ├── services/       # api.js (mock-backed, swap to real API later)
+│   │   └── utils/          # cn.js (clsx+twMerge), format.js
 │   └── ...
 ├── backend/                # Express.js server (TBD)
-├── database/               # PostgreSQL schema & migrations (TBD)
+├── database/               # PostgreSQL schema (TBD)
 └── README.md
 ```
 
-## Pages
+## Routes
 
 | Route             | Page               | Access         |
 |-------------------|--------------------|----------------|
 | `/`               | Landing            | Public         |
 | `/login`          | Login              | Public         |
-| `/register/:id`   | Registration Form  | Authenticated  |
-| `/dashboard`      | User Dashboard     | Authenticated  |
+| `/register/:id`   | Registration Form  | Public         |
 | `/admin`          | Admin Dashboard    | Admin only     |
-| `/profile`        | Profile            | Authenticated  |
 
 ## Getting Started
-
-### Prerequisites
-- Node.js ≥ 18
-- npm ≥ 9
-
-### Frontend
 
 ```bash
 cd frontend
@@ -55,31 +47,36 @@ npm install
 npm run dev
 ```
 
-Frontend runs on `http://localhost:5173`. Development server proxies `/api` requests to `http://localhost:5000`.
+Frontend runs on `http://localhost:5173`. Proxies `/api` to `http://localhost:5000`.
 
 ### Demo Accounts
 
 | Role  | Email                | Password  |
 |-------|----------------------|-----------|
 | Admin | admin@himti.id       | admin123  |
-| User  | mahasiswa@binus.ac.id | user123  |
+| User  | user@binus.ac.id     | user123   |
 
-### Switching from Mock to Live API
+### Mock to Live API
 
-Mock data is enabled by default. When the backend API is ready:
+Edit `src/services/api.js` — replace function bodies with Axios/fetch. No component changes needed.
 
-1. Open `src/services/authService.js` and `src/services/eventService.js`
-2. Change `const USE_MOCK = true` to `false`
-3. Restart the dev server
+## Theme
 
-The service layer is designed so no other code changes are required.
+- `zinc-950` dark background, glassmorphism cards (`backdrop-blur-xl`)
+- White accent buttons, subtle `border-white/[7%]`
+- Animations: slide-in, fade-in, fade-in-up
+- Custom scrollbar for dark mode
+
+## Auth
+
+Dummy auth via `AuthContext` — detects role by email (`admin@himti.id` → admin, anything else → user). Navbar shows login button when guest, user dropdown when authenticated.
 
 ## Team
 
-- **Person 1 – Frontend** — UI/UX, React components, form validation, API integration
-- **Person 2 – Backend** — REST API, JWT auth, business logic, middleware
-- **Person 3 – Database & DevOps** — Schema design, migrations, deployment
+- **Person 1 – Frontend** — React, UI/UX, components, form validation
+- **Person 2 – Backend** — REST API, JWT, business logic (TBD)
+- **Person 3 – Database & DevOps** — PostgreSQL, schema, deployment (TBD)
 
 ## License
 
-Internal project — HIMTI BINUS University.
+Internal — HIMTI BINUS University.
