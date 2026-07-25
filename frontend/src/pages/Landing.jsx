@@ -82,13 +82,13 @@ export default function Landing() {
           </p>
 
           <div className="flex items-center justify-center gap-4 animate-fade-in-up stagger-2">
-            <a
-              href="#closing-soon"
+            <RouterLink
+              to="/events"
               className="group inline-flex items-center gap-2 px-6 py-3 bg-white text-zinc-900 font-medium rounded-xl shadow-lg shadow-white/10 hover:shadow-white/20 hover:bg-zinc-100 transition-all duration-300 text-sm"
             >
               Explore Events
               <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </a>
+            </RouterLink>
             <a
               href="#about"
               className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-800/60 text-zinc-100 font-medium rounded-xl border border-white/10 hover:bg-zinc-700/60 hover:border-white/20 transition-all duration-300 text-sm"

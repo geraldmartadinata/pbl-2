@@ -4,10 +4,10 @@ import { cn } from '../utils/cn'
 import {
   Menu,
   X,
+  LayoutDashboard,
   Calendar,
   ChevronDown,
   LogOut,
-  LayoutDashboard,
   User,
   Ticket,
 } from 'lucide-react'
@@ -30,7 +30,8 @@ export default function Navbar() {
   }, [])
 
   const navLinks = [
-    { to: '/', label: 'Events', icon: Calendar },
+    { to: '/', label: 'Dashboard', icon: LayoutDashboard },
+    { to: '/events', label: 'Events', icon: Calendar },
   ]
 
   return (

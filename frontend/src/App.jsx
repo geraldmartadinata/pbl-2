@@ -5,6 +5,7 @@ import Navbar from './components/Navbar'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Registration from './pages/Registration'
+import Events from './pages/Events'
 import EventDetail from './pages/EventDetail'
 import AdminDashboard from './pages/AdminDashboard'
 import UserDashboard from './pages/UserDashboard'
@@ -29,11 +30,11 @@ export default function App() {
             }
           />
           <Route
-            path="/register/:id"
+            path="/events"
             element={
               <>
                 <Navbar />
-                <Registration />
+                <Events />
               </>
             }
           />
@@ -43,6 +44,15 @@ export default function App() {
               <>
                 <Navbar />
                 <EventDetail />
+              </>
+            }
+          />
+          <Route
+            path="/register/:id"
+            element={
+              <>
+                <Navbar />
+                <Registration />
               </>
             }
           />
