@@ -6,6 +6,8 @@ import { useAuth } from '../contexts/AuthContext'
 import Card from '../components/Card'
 import Badge from '../components/Badge'
 import Spinner from '../components/Spinner'
+import TypewriterText from '../components/TypewriterText'
+import AnimatedCounter from '../components/AnimatedCounter'
 import {
   CalendarDays,
   MapPin,
@@ -69,12 +71,8 @@ export default function Landing() {
             HIMTI BINUS University — Since 2005
           </div>
 
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight mb-6 animate-fade-in-up">
-            Where Technology
-            <br />
-            <span className="bg-gradient-to-r from-zinc-100 via-zinc-300 to-zinc-400 bg-clip-text text-transparent">
-              Meets Opportunity
-            </span>
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight mb-6 animate-fade-in-up min-h-[1.2em]">
+            <TypewriterText lines={['Where Technology Meets Opportunity', 'Ready to Build the Future?']} />
           </h1>
 
           <p className="text-lg text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up stagger-1">
@@ -103,7 +101,7 @@ export default function Landing() {
         <section id="about" className="max-w-6xl mx-auto px-4 pb-24">
           <div className="grid md:grid-cols-3 gap-4">
             {/* Box 1 — What is HIMTI (tall) */}
-            <Card className="md:col-span-1 md:row-span-2 p-8 flex flex-col justify-between">
+            <Card className="md:col-span-1 md:row-span-2 p-8 flex flex-col justify-between animate-fade-in-up">
               <div>
                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center mb-5">
                   <GraduationCap className="h-5 w-5 text-zinc-200" />
@@ -131,7 +129,7 @@ export default function Landing() {
             </Card>
 
             {/* Box 2 — Quote */}
-            <Card className="md:col-span-2 p-8 flex items-start gap-4">
+            <Card className="md:col-span-2 p-8 flex items-start gap-4 animate-fade-in-up stagger-1">
               <Quote className="h-8 w-8 text-zinc-600 shrink-0 mt-1" />
               <div>
                 <p className="text-lg text-zinc-200 leading-relaxed italic">
@@ -145,18 +143,18 @@ export default function Landing() {
             </Card>
 
             {/* Box 3 — Stats */}
-            <Card className="md:col-span-1 p-8">
+            <Card className="md:col-span-1 p-8 animate-fade-in-up stagger-2">
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
-                  <p className="text-3xl font-bold text-white">10+</p>
+                  <p className="text-3xl font-bold text-white"><AnimatedCounter target={10} suffix="+" /></p>
                   <p className="text-xs text-zinc-500 mt-1">Events / Year</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-3xl font-bold text-white">5K+</p>
+                  <p className="text-3xl font-bold text-white"><AnimatedCounter target={5000} duration={1200} suffix="+" /></p>
                   <p className="text-xs text-zinc-500 mt-1">Members</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-3xl font-bold text-white">15+</p>
+                  <p className="text-3xl font-bold text-white"><AnimatedCounter target={15} suffix="+" /></p>
                   <p className="text-xs text-zinc-500 mt-1">Years Active</p>
                 </div>
                 <div className="text-center">
@@ -167,7 +165,7 @@ export default function Landing() {
             </Card>
 
             {/* Box 4 — Vision */}
-            <Card className="md:col-span-1 p-8">
+            <Card className="md:col-span-1 p-8 animate-fade-in-up stagger-3">
               <Globe className="h-5 w-5 text-zinc-300 mb-3" />
               <h3 className="text-sm font-semibold text-white mb-2">
                 Our Vision
@@ -216,9 +214,9 @@ export default function Landing() {
               {urgentEvents.map((event, i) => {
                 const dl = daysLeft(event.closing_date)
                 return (
-                  <RouterLink key={event.id} to={`/events/${event.id}`}>
+                    <RouterLink key={event.id} to={`/events/${event.id}`}>
                     <Card
-                      className={`p-6 h-full flex flex-col hover:border-white/[15%] transition-all duration-300 group cursor-pointer border-l-2 ${categoryStyles[event.category] || 'border-l-white/10'}`}
+                      className={`p-6 h-full flex flex-col hover:border-white/[15%] transition-all duration-300 group cursor-pointer border-l-2 animate-fade-in-up stagger-${i + 1} ${categoryStyles[event.category] || 'border-l-white/10'}`}
                     >
                       {/* Closing badge */}
                       <div className="flex items-center justify-between mb-4">
