@@ -43,7 +43,7 @@ export default function Sidebar() {
       <div className="lg:hidden sticky top-0 z-50 border-b border-white/[7%] bg-zinc-950/95">
         <div className="flex items-center justify-between px-4 h-14">
           <Link to="/admin" className="flex items-center gap-2.5">
-            <img src="/images/himti-logo.png" alt="HIMTI" className="w-7 h-7 object-contain" />
+            <img src="/images/himti-icon.svg" alt="HIMTI" className="w-7 h-7 object-contain" />
             <span className="font-semibold text-white">HIMTI Admin</span>
           </Link>
           <button
@@ -84,7 +84,7 @@ export default function Sidebar() {
       <aside className="hidden lg:flex flex-col w-64 bg-zinc-900/50 backdrop-blur-2xl border-r border-white/[6%] min-h-screen">
         <div className="p-6">
           <Link to="/admin" className="flex items-center gap-2.5 mb-8">
-            <img src="/images/himti-logo.png" alt="HIMTI" className="w-8 h-8 object-contain" />
+            <img src="/images/himti-icon.svg" alt="HIMTI" className="w-8 h-8 object-contain" />
             <span className="font-semibold text-white text-lg tracking-tight">
               HIMTI
             </span>

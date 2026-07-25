@@ -39,7 +39,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Left — Brand */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <img src="/images/himti-logo.png" alt="HIMTI" className="w-8 h-8 object-contain" />
+            <img src="/images/himti-icon.svg" alt="HIMTI" className="w-8 h-8 object-contain" />
             <span className="font-semibold text-white text-lg tracking-tight">
               HIMTI
             </span>
