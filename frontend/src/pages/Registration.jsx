@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getEventById, registerParticipant } from '../services/api'
 import { formatDate, formatTime } from '../utils/format'
+import { useToast } from '../contexts/ToastContext'
 import Card from '../components/Card'
 import Input from '../components/Input'
 import Button from '../components/Button'
@@ -19,6 +20,7 @@ export default function Registration() {
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
+  const toast = useToast()
 
   useEffect(() => {
     getEventById(Number(id))
@@ -50,7 +52,8 @@ export default function Registration() {
     try {
       await registerParticipant({ ...form, event_id: event.id, event_title: event.title })
       setSuccess(true)
-    } catch {} finally {
+      toast.success('Registration submitted successfully!')
+    } catch { toast.error('Registration failed. Please try again.') } finally {
       setSubmitting(false)
     }
   }

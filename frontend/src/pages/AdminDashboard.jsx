@@ -5,6 +5,7 @@ import Badge from '../components/Badge'
 import Button from '../components/Button'
 import { PageSpinner } from '../components/Spinner'
 import Sidebar from '../components/Sidebar'
+import { useToast } from '../contexts/ToastContext'
 import { Search, Users, CheckCircle, Clock, UserCheck } from 'lucide-react'
 
 const statusConfig = {
@@ -19,6 +20,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [checkingId, setCheckingId] = useState(null)
+  const toast = useToast()
 
   useEffect(() => {
     getAllParticipants()
@@ -32,7 +34,8 @@ export default function AdminDashboard() {
     try {
       const updated = await toggleCheckIn(id)
       setParticipants((prev) => prev.map((p) => (p.id === id ? updated : p)))
-    } catch {} finally {
+      toast.success(`${updated.full_name} checked in successfully`)
+    } catch { toast.error('Check-in failed') } finally {
       setCheckingId(null)
     }
   }
