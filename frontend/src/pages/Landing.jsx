@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { getEvents } from '../services/api'
 import { formatDate, daysLeft } from '../utils/format'
+import { useAuth } from '../contexts/AuthContext'
 import Card from '../components/Card'
 import Badge from '../components/Badge'
 import Spinner from '../components/Spinner'
@@ -36,6 +37,7 @@ export default function Landing() {
       .finally(() => setLoading(false))
   }, [])
 
+  const { isAuth, user } = useAuth()
   const now = new Date()
   const urgentEvents = events
     .filter((e) => {
@@ -357,12 +359,14 @@ export default function Landing() {
                   >
                     Login
                   </RouterLink>
-                  <RouterLink
-                    to="/admin"
-                    className="block text-zinc-500 hover:text-white transition-colors"
-                  >
-                    Admin
-                  </RouterLink>
+                  {isAuth && user?.role === 'admin' && (
+                    <RouterLink
+                      to="/admin"
+                      className="block text-zinc-500 hover:text-white transition-colors"
+                    >
+                      Admin
+                    </RouterLink>
+                  )}
                 </div>
               </div>
 
