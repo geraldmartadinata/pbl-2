@@ -9,6 +9,7 @@ import {
   LogOut,
   LayoutDashboard,
   User,
+  Ticket,
 } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 
@@ -106,6 +107,15 @@ export default function Navbar() {
                     )}
 
                     <Link
+                      to="/dashboard"
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex items-center gap-3 px-3 py-2 text-sm text-zinc-300 hover:text-white rounded-xl hover:bg-white/[6%] transition-all"
+                    >
+                      <Ticket className="h-4 w-4" />
+                      My Registrations
+                    </Link>
+
+                    <Link
                       to="/"
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-3 px-3 py-2 text-sm text-zinc-300 hover:text-white rounded-xl hover:bg-white/[6%] transition-all"
@@ -192,6 +202,14 @@ export default function Navbar() {
                     Admin Panel
                   </Link>
                 )}
+                <Link
+                  to="/dashboard"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm text-zinc-300 hover:text-white rounded-xl hover:bg-white/5"
+                >
+                  <Ticket className="h-4 w-4" />
+                  My Registrations
+                </Link>
                 <button
                   onClick={() => {
                     logout()

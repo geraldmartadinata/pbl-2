@@ -5,6 +5,7 @@ import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Registration from './pages/Registration'
 import AdminDashboard from './pages/AdminDashboard'
+import UserDashboard from './pages/UserDashboard'
 import ProtectedRoute from './components/ProtectedRoute'
 
 export default function App() {
@@ -34,6 +35,17 @@ export default function App() {
 
           {/* Standalone pages */}
           <Route path="/login" element={<Login />} />
+
+          {/* Protected with Navbar */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <UserDashboard />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Admin — no top navbar, has sidebar */}
           <Route path="/admin" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
