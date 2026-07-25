@@ -9,14 +9,30 @@ import Button from '../components/Button'
 import Spinner from '../components/Spinner'
 import { CalendarDays, MapPin, CheckCircle2, ArrowLeft, Clock } from 'lucide-react'
 
+const DRAFT_KEY = 'reg_draft'
 const initialForm = { full_name: '', nim: '', email: '', line_id: '' }
+
+function loadDraft(id) {
+  try {
+    const raw = sessionStorage.getItem(`${DRAFT_KEY}_${id}`)
+    return raw ? JSON.parse(raw) : null
+  } catch { return null }
+}
+
+function saveDraft(id, data) {
+  sessionStorage.setItem(`${DRAFT_KEY}_${id}`, JSON.stringify(data))
+}
+
+function clearDraft(id) {
+  sessionStorage.removeItem(`${DRAFT_KEY}_${id}`)
+}
 
 export default function Registration() {
   const { id } = useParams()
   const navigate = useNavigate()
   const [event, setEvent] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [form, setForm] = useState(initialForm)
+  const [form, setForm] = useState(() => loadDraft(id) || initialForm)
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -30,7 +46,9 @@ export default function Registration() {
   }, [id])
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
+    const next = { ...form, [e.target.name]: e.target.value }
+    setForm(next)
+    saveDraft(id, next)
     if (errors[e.target.name]) setErrors({ ...errors, [e.target.name]: '' })
   }
 
@@ -52,6 +70,7 @@ export default function Registration() {
     try {
       await registerParticipant({ ...form, event_id: event.id, event_title: event.title })
       setSuccess(true)
+      clearDraft(id)
       toast.success('Registration submitted successfully!')
     } catch { toast.error('Registration failed. Please try again.') } finally {
       setSubmitting(false)
