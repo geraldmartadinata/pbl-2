@@ -10,7 +10,6 @@ import {
   MapPin,
   Users,
   Clock,
-  ChevronRight,
   ArrowUpRight,
   Quote,
   Sparkles,
@@ -193,12 +192,7 @@ export default function Landing() {
                 Register before registration closes
               </p>
             </div>
-            <RouterLink
-              to="/"
-              className="hidden sm:flex items-center gap-1 text-sm text-zinc-400 hover:text-white transition-colors"
-            >
-              View all <ChevronRight className="h-4 w-4" />
-            </RouterLink>
+
           </div>
 
           {loading ? (
