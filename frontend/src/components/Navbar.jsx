@@ -116,7 +116,7 @@ export default function Navbar() {
                     </Link>
 
                     <Link
-                      to="/"
+                      to="/profile"
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-3 px-3 py-2 text-sm text-zinc-300 hover:text-white rounded-xl hover:bg-white/[6%] transition-all"
                     >

@@ -7,6 +7,7 @@ import Login from './pages/Login'
 import Registration from './pages/Registration'
 import AdminDashboard from './pages/AdminDashboard'
 import UserDashboard from './pages/UserDashboard'
+import Profile from './pages/Profile'
 import NotFound from './pages/NotFound'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -46,6 +47,15 @@ export default function App() {
               <ProtectedRoute>
                 <Navbar />
                 <UserDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <Profile />
               </ProtectedRoute>
             }
           />
