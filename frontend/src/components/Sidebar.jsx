@@ -40,12 +40,10 @@ export default function Sidebar() {
   return (
     <>
       {/* Mobile top bar */}
-      <div className="lg:hidden sticky top-0 z-50 border-b border-white/[7%] bg-zinc-950/80 backdrop-blur-2xl">
+      <div className="lg:hidden sticky top-0 z-50 border-b border-white/[7%] bg-zinc-950/95">
         <div className="flex items-center justify-between px-4 h-14">
           <Link to="/admin" className="flex items-center gap-2.5">
-            <div className="w-7 h-7 bg-white rounded-xl flex items-center justify-center">
-              <span className="text-zinc-900 font-bold text-xs">H</span>
-            </div>
+            <img src="/images/himti-logo.png" alt="HIMTI" className="w-7 h-7 object-contain" />
             <span className="font-semibold text-white">HIMTI Admin</span>
           </Link>
           <button
@@ -86,9 +84,7 @@ export default function Sidebar() {
       <aside className="hidden lg:flex flex-col w-64 bg-zinc-900/50 backdrop-blur-2xl border-r border-white/[6%] min-h-screen">
         <div className="p-6">
           <Link to="/admin" className="flex items-center gap-2.5 mb-8">
-            <div className="w-8 h-8 bg-white rounded-xl flex items-center justify-center shadow-lg shadow-white/10">
-              <span className="text-zinc-900 font-bold text-sm">H</span>
-            </div>
+            <img src="/images/himti-logo.png" alt="HIMTI" className="w-8 h-8 object-contain" />
             <span className="font-semibold text-white text-lg tracking-tight">
               HIMTI
             </span>

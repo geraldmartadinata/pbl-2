@@ -310,9 +310,7 @@ export default function Landing() {
               {/* Brand */}
               <div>
                 <div className="flex items-center gap-2.5 mb-4">
-                  <div className="w-8 h-8 bg-white rounded-xl flex items-center justify-center">
-                    <span className="text-zinc-900 font-bold text-sm">H</span>
-                  </div>
+                  <img src="/images/himti-logo.png" alt="HIMTI" className="w-8 h-8 object-contain" />
                   <span className="font-semibold text-white text-lg">
                     HIMTI
                   </span>

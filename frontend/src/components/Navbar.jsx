@@ -34,14 +34,12 @@ export default function Navbar() {
   ]
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/[7%] bg-zinc-950/80 backdrop-blur-2xl">
+    <nav className="sticky top-0 z-50 border-b border-white/[7%] bg-zinc-950/95">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Left — Brand */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 bg-white rounded-xl flex items-center justify-center shadow-lg shadow-white/10 group-hover:shadow-white/20 transition-shadow">
-              <span className="text-zinc-900 font-bold text-sm">H</span>
-            </div>
+            <img src="/images/himti-logo.png" alt="HIMTI" className="w-8 h-8 object-contain" />
             <span className="font-semibold text-white text-lg tracking-tight">
               HIMTI
             </span>

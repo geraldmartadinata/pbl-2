@@ -50,9 +50,7 @@ export default function Login() {
 
       <div className="relative z-10 w-full max-w-md px-4">
         <div className="text-center mb-8 animate-fade-in">
-          <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-white/10">
-            <span className="text-zinc-900 font-bold text-lg">H</span>
-          </div>
+          <img src="/images/himti-logo.png" alt="HIMTI" className="w-12 h-12 object-contain mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-white">Welcome back</h1>
           <p className="text-sm text-zinc-400 mt-1">
             Sign in to your HIMTI account
