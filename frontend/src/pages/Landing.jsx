@@ -59,9 +59,19 @@ export default function Landing() {
       {/* Mesh gradient background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] bg-white/[2%] rounded-full blur-[120px]" />
+        <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-blue-600/10 blur-[150px] rounded-full" />
         <div className="absolute top-[30%] right-[-300px] w-[500px] h-[500px] bg-zinc-700/[3%] rounded-full blur-[100px]" />
         <div className="absolute bottom-[-100px] left-[20%] w-[400px] h-[400px] bg-white/[1.5%] rounded-full blur-[80px]" />
       </div>
+
+      {/* Grid overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[3%]"
+        style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px',
+        }}
+      />
 
       <div className="relative z-10">
         {/* ===== HERO ===== */}
@@ -71,8 +81,8 @@ export default function Landing() {
             HIMTI BINUS University — Since 2005
           </div>
 
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight mb-6 animate-fade-in-up min-h-[1.2em]">
-            <TypewriterText lines={['Where Technology Meets Opportunity', 'Ready to Build the Future?']} />
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight mb-6 animate-fade-in-up min-h-[120px] sm:min-h-[100px]">
+            <TypewriterText lines={['Where Technology Meets Opportunity.', 'Innovate, Integrate, Inspire.', 'Empowering the Next Generation of Tech Leaders.', 'Code the Future, Today.']} />
           </h1>
 
           <p className="text-lg text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up stagger-1">
@@ -101,7 +111,7 @@ export default function Landing() {
         <section id="about" className="max-w-6xl mx-auto px-4 pb-24">
           <div className="grid md:grid-cols-3 gap-4">
             {/* Box 1 — What is HIMTI (tall) */}
-            <Card className="md:col-span-1 md:row-span-2 p-8 flex flex-col justify-between animate-fade-in-up">
+            <Card className="md:col-span-1 md:row-span-2 p-8 flex flex-col justify-between animate-fade-in-up hover:border-blue-500/30 transition-all duration-500">
               <div>
                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center mb-5">
                   <GraduationCap className="h-5 w-5 text-zinc-200" />
@@ -129,7 +139,7 @@ export default function Landing() {
             </Card>
 
             {/* Box 2 — Quote */}
-            <Card className="md:col-span-2 p-8 flex items-start gap-4 animate-fade-in-up stagger-1">
+            <Card className="md:col-span-2 p-8 flex items-start gap-4 animate-fade-in-up stagger-1 hover:border-blue-500/30 transition-all duration-500">
               <Quote className="h-8 w-8 text-zinc-600 shrink-0 mt-1" />
               <div>
                 <p className="text-lg text-zinc-200 leading-relaxed italic">
@@ -143,7 +153,7 @@ export default function Landing() {
             </Card>
 
             {/* Box 3 — Stats */}
-            <Card className="md:col-span-1 p-8 animate-fade-in-up stagger-2">
+            <Card className="md:col-span-1 p-8 animate-fade-in-up stagger-2 hover:border-blue-500/30 transition-all duration-500">
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
                   <p className="text-3xl font-bold text-white"><AnimatedCounter target={10} suffix="+" /></p>
@@ -165,7 +175,7 @@ export default function Landing() {
             </Card>
 
             {/* Box 4 — Vision */}
-            <Card className="md:col-span-1 p-8 animate-fade-in-up stagger-3">
+            <Card className="md:col-span-1 p-8 animate-fade-in-up stagger-3 hover:border-blue-500/30 transition-all duration-500">
               <Globe className="h-5 w-5 text-zinc-300 mb-3" />
               <h3 className="text-sm font-semibold text-white mb-2">
                 Our Vision
