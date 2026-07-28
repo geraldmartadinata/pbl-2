@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState } from 'react'
+import { loginAccount, getMe } from '../services/api'
 
 const AuthContext = createContext(null)
 
@@ -8,15 +9,24 @@ export function AuthProvider({ children }) {
     return stored ? JSON.parse(stored) : null
   })
 
-  const login = (email, password) => {
-    const role =
-      email.toLowerCase() === 'admin' || email === 'admin@himti.id'
-        ? 'admin'
-        : 'user'
+  const [token, setToken] = useState(() => localStorage.getItem('token'))
+
+  const login = async (email, password) => {
+    const { token: jwt } = await loginAccount({ email, password })
+    localStorage.setItem('token', jwt)
+    setToken(jwt)
+
+    const profile = await getMe()
     const userData = {
-      name: role === 'admin' ? 'Admin HIMTI' : email.split('@')[0] || 'User',
-      email,
-      role,
+      id: profile.id,
+      name: profile.full_name,
+      email: profile.email,
+      nim: profile.nim,
+      role: profile.role === 'ADMIN' ? 'admin' : 'user',
+      phone: profile.phone,
+      studyProgram: profile.study_program,
+      intakeYear: profile.intake_year,
+      campus: profile.campus,
     }
     setUser(userData)
     localStorage.setItem('user', JSON.stringify(userData))
@@ -25,6 +35,8 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     setUser(null)
+    setToken(null)
+    localStorage.removeItem('token')
     localStorage.removeItem('user')
   }
 
@@ -35,7 +47,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuth: !!user, updateProfile }}>
+    <AuthContext.Provider value={{ user, login, logout, isAuth: !!user && !!token, updateProfile }}>
       {children}
     </AuthContext.Provider>
   )
