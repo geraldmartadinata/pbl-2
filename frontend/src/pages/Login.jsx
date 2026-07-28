@@ -24,7 +24,7 @@ export default function Login() {
     setLoading(true)
     try {
       const userData = await login(email, password)
-      navigate(userData.role === 'admin' ? '/admin' : '/dashboard')
+      navigate(userData.role === 'admin' ? '/admin' : '/')
     } catch (err) {
       setError(err.message)
     } finally {
