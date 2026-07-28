@@ -172,7 +172,7 @@ export default function Apply() {
       </div>
 
       <div className="relative z-10 max-w-2xl mx-auto px-4">
-        <BackButton to="/dashboard" label="Back to Dashboard" />
+        <BackButton to={user?.role === 'admin' ? '/admin' : '/dashboard'} label="Back" />
 
         <h1 className="text-2xl font-bold text-white mb-2">Apply to Join HIMTI</h1>
         <p className="text-sm text-zinc-500 mb-6">Step {step} of {totalSteps}: {STEPS[step - 1]}</p>

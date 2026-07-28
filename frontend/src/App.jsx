@@ -28,7 +28,7 @@ export default function App() {
 
           {/* Protected with Navbar */}
           <Route path="/dashboard" element={<ProtectedRoute><Navbar /><UserDashboard /></ProtectedRoute>} />
-          <Route path="/apply" element={<ProtectedRoute><Navbar /><Apply /></ProtectedRoute>} />
+          <Route path="/apply" element={<ProtectedRoute userOnly><Navbar /><Apply /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Navbar /><Profile /></ProtectedRoute>} />
           <Route path="/faq" element={<><Navbar /><FAQ /></>} />
 

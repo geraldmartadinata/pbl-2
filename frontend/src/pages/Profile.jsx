@@ -12,6 +12,7 @@ export default function Profile() {
   const toast = useToast()
   const [name, setName] = useState(user?.name || '')
   const [saving, setSaving] = useState(false)
+  const backTo = user?.role === 'admin' ? '/admin' : '/dashboard'
 
   const handleSave = async () => {
     if (!name.trim()) {
@@ -32,7 +33,7 @@ export default function Profile() {
       </div>
 
       <div className="relative z-10 max-w-2xl mx-auto px-4 py-12">
-        <BackButton to="/dashboard" label="Back to My Registrations" />
+        <BackButton to={backTo} label={user?.role === 'admin' ? 'Back to Admin' : 'Back to My Applications'} />
         <h1 className="text-2xl font-bold text-white mb-8">Profile</h1>
 
         <div className="space-y-4">
