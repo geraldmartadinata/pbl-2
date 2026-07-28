@@ -58,19 +58,22 @@ export default function Navbar() {
                     {user?.role === 'admin' && (
                       <Link to="/admin" onClick={() => setDropdownOpen(false)}
                         className="flex items-center gap-3 px-3 py-2 text-sm text-zinc-300 hover:text-white rounded-xl hover:bg-white/[6%] transition-all">
-                        <LayoutDashboard className="h-4 w-4" /> Admin Panel
+                        <LayoutDashboard className="h-4 w-4" /> Dashboard
                       </Link>
                     )}
 
-                    <Link to="/dashboard" onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-sm text-zinc-300 hover:text-white rounded-xl hover:bg-white/[6%] transition-all">
-                      <Ticket className="h-4 w-4" /> My Application
-                    </Link>
-
-                    <Link to="/apply" onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-sm text-zinc-300 hover:text-white rounded-xl hover:bg-white/[6%] transition-all">
-                      <Send className="h-4 w-4" /> Apply
-                    </Link>
+                    {user?.role !== 'admin' && (
+                      <>
+                        <Link to="/dashboard" onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-3 px-3 py-2 text-sm text-zinc-300 hover:text-white rounded-xl hover:bg-white/[6%] transition-all">
+                          <Ticket className="h-4 w-4" /> My Application
+                        </Link>
+                        <Link to="/apply" onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-3 px-3 py-2 text-sm text-zinc-300 hover:text-white rounded-xl hover:bg-white/[6%] transition-all">
+                          <Send className="h-4 w-4" /> Apply
+                        </Link>
+                      </>
+                    )}
 
                     <Link to="/profile" onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-3 px-3 py-2 text-sm text-zinc-300 hover:text-white rounded-xl hover:bg-white/[6%] transition-all">
