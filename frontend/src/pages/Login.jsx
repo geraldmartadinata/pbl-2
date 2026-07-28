@@ -22,11 +22,14 @@ export default function Login() {
       return
     }
     setLoading(true)
-    // Simulate network
-    await new Promise((r) => setTimeout(r, 600))
-    const user = login(email, password)
-    setLoading(false)
-    navigate(user.role === 'admin' ? '/admin' : '/')
+    try {
+      const userData = await login(email, password)
+      navigate(userData.role === 'admin' ? '/admin' : '/dashboard')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const fillDemo = (type) => {
@@ -111,6 +114,13 @@ export default function Login() {
                 <span className="text-zinc-500">user@binus.ac.id</span>
               </button>
             </div>
+          </div>
+
+          <div className="mt-5 pt-4 border-t border-white/[6%] text-center">
+            <p className="text-xs text-zinc-500">
+              Don't have an account?{' '}
+              <Link to="/register" className="text-zinc-300 hover:text-white transition-colors font-medium">Create one</Link>
+            </p>
           </div>
         </Card>
       </div>
