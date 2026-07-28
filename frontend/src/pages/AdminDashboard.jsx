@@ -5,6 +5,7 @@ import Card from '../components/Card'
 import Badge from '../components/Badge'
 import Button from '../components/Button'
 import { PageSpinner } from '../components/Spinner'
+import Skeleton from '../components/Skeleton'
 import Sidebar from '../components/Sidebar'
 import { useToast } from '../contexts/ToastContext'
 import { cn } from '../utils/cn'
@@ -117,8 +118,10 @@ export default function AdminDashboard() {
               </div>
               <h2 className="text-sm font-semibold text-white mb-4">Recent Pending Applications</h2>
               <Card className="overflow-hidden">
+                {loading ? <Skeleton rows={3} /> :
                 <ApplicantsTable applications={applications.filter((a) => a.status === 'PENDING').slice(0, 5)}
                   actionId={actionId} onAction={setConfirmAction} onView={openDetail} compact />
+                }
               </Card>
             </>
           ) : (
@@ -139,7 +142,9 @@ export default function AdminDashboard() {
                 </select>
               </div>
               <Card className="overflow-hidden">
+                {loading ? <Skeleton rows={5} /> :
                 <ApplicantsTable applications={applications} actionId={actionId} onAction={setConfirmAction} onView={openDetail} />
+                }
                 {pagination?.totalPages > 1 && (
                   <div className="px-4 py-3 border-t border-white/[6%] flex items-center justify-between text-xs text-zinc-600">
                     <span>Page {pagination.page} of {pagination.totalPages}</span>
