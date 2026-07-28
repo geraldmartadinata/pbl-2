@@ -8,35 +8,42 @@ import Input from '../components/Input'
 import Button from '../components/Button'
 import Spinner from '../components/Spinner'
 import BackButton from '../components/BackButton'
-import { Send, Building2 } from 'lucide-react'
+import { Send, ChevronLeft, ChevronRight, Upload } from 'lucide-react'
+
+const CAMPUSES = ['BINUS Kemanggisan', 'BINUS Alam Sutra', 'BINUS Bekasi', 'BINUS Bandung', 'BINUS Semarang', 'BINUS Malang']
+
+const COMMISSIONS = [
+  { name: 'Education', id: 1, divisions: [{ id: 'div-1', name: 'Responsi' }, { id: 'div-2', name: 'Academic Event' }] },
+  { name: 'Relation Expansion', id: 2, divisions: [{ id: 'div-3', name: 'Publication & Marketing' }, { id: 'div-4', name: 'HIMTI Care' }] },
+  { name: 'Research & Development', id: 3, divisions: [{ id: 'div-5', name: 'Web Development' }, { id: 'div-6', name: 'Creative & Design' }] },
+  { name: 'Resource & Development', id: 4, divisions: [{ id: 'div-7', name: 'Supervisor' }, { id: 'div-8', name: 'Human Resource Development' }] },
+]
+
+const ALL_DIVISIONS = COMMISSIONS.flatMap((c) => c.divisions)
 
 export default function Apply() {
   const navigate = useNavigate()
   const toast = useToast()
-  const [divisions, setDivisions] = useState([])
+  const { user } = useAuth()
+  const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [existing, setExisting] = useState(null)
+  const [file, setFile] = useState(null)
   const [form, setForm] = useState({
-    divisionId1: '', divisionId2: '', divisionId3: '',
-    gpa: '',
-    motivation: '', reasonForJoining: '', relevantSkills: '',
-    organizationalExperience: '', portfolioUrl: '', linkedinUrl: '', githubUrl: '',
-    additionalNotes: '', timeCommitmentAgreed: false,
+    fullName: user?.name || '', nim: user?.nim || '', gpa: '', phone: user?.phone || '',
+    lineId: '', campus: '', motivation: '', relevantSkills: '', organizationalExperience: '', additionalNotes: '',
+    divisionId1: '', reason1: '', divisionId2: '', reason2: '', divisionId3: '', reason3: '',
+    portfolioUrl: '', cvUrl: '', linkedinUrl: '', commitmentAgreed: false,
   })
   const [errors, setErrors] = useState({})
 
   useEffect(() => {
     Promise.all([getDivisions(), getMyApplication().catch(() => null)])
-      .then(([divs, app]) => {
-        setDivisions(divs)
-        if (app) setExisting(app)
-      })
+      .then(([, app]) => { if (app) setExisting(app) })
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
-
-  const commissions = [...new Set(divisions.map((d) => d.commission))]
 
   const handleChange = (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value
@@ -44,38 +51,54 @@ export default function Apply() {
     if (errors[e.target.name]) setErrors({ ...errors, [e.target.name]: '' })
   }
 
-  const validate = () => {
+  const handleFile = (e) => {
+    const f = e.target.files?.[0]
+    if (f) setFile(f)
+  }
+
+  const validateStep = () => {
     const e = {}
-    if (!form.divisionId1) e.divisionId1 = 'Select your first choice'
-    if (!form.gpa || isNaN(form.gpa) || form.gpa < 0 || form.gpa > 4) e.gpa = 'Valid GPA (0-4) required'
-    if (form.motivation.length < 20) e.motivation = 'At least 20 characters'
-    if (form.reasonForJoining.length < 20) e.reasonForJoining = 'At least 20 characters'
-    if (!form.relevantSkills.trim()) e.relevantSkills = 'Required'
-    if (!form.timeCommitmentAgreed) e.timeCommitmentAgreed = 'You must agree'
+    if (step === 1) {
+      if (!form.fullName.trim()) e.fullName = 'Required'
+      if (!form.nim.trim()) e.nim = 'Required'
+      if (!form.gpa || isNaN(form.gpa) || form.gpa < 0 || form.gpa > 4) e.gpa = 'Valid GPA (0-4)'
+      if (!form.phone.trim()) e.phone = 'Required'
+      if (!form.lineId.trim()) e.lineId = 'Required'
+      if (!form.campus) e.campus = 'Select campus'
+      if (form.motivation.length < 10) e.motivation = 'At least 10 characters'
+      if (!form.relevantSkills.trim()) e.relevantSkills = 'Required'
+    } else if (step === 2) {
+      if (!form.divisionId1) e.divisionId1 = 'Select division'
+      if (form.reason1.length < 10) e.reason1 = 'At least 10 characters'
+    } else if (step === 3) {
+      if (!form.divisionId2) e.divisionId2 = 'Select division'
+      if (form.divisionId2 === form.divisionId1) e.divisionId2 = 'Cannot be same as 1st priority'
+      if (form.reason2.length < 10) e.reason2 = 'At least 10 characters'
+    } else if (step === 4) {
+      if (!form.divisionId3) e.divisionId3 = 'Select division'
+      if (form.divisionId3 === form.divisionId1 || form.divisionId3 === form.divisionId2) e.divisionId3 = 'Must differ from other priorities'
+      if (form.reason3.length < 10) e.reason3 = 'At least 10 characters'
+    } else if (step === 5) {
+      if (!form.commitmentAgreed) e.commitmentAgreed = 'You must agree'
+    }
     return e
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    const v = validate()
+  const handleNext = () => {
+    const v = validateStep()
     setErrors(v)
     if (Object.keys(v).length) return
+    setStep((s) => s + 1)
+  }
+
+  const handleSubmit = async () => {
     setSubmitting(true)
     try {
       await submitApplication({
-        divisionId: form.divisionId1,
-        divisionId2: form.divisionId2 || null,
-        divisionId3: form.divisionId3 || null,
-        gpa: Number(form.gpa),
-        motivation: form.motivation,
-        reasonForJoining: form.reasonForJoining,
-        relevantSkills: form.relevantSkills,
-        organizationalExperience: form.organizationalExperience || null,
-        portfolioUrl: form.portfolioUrl || null,
-        linkedinUrl: form.linkedinUrl || null,
-        githubUrl: form.githubUrl || null,
-        additionalNotes: form.additionalNotes || null,
-        timeCommitmentAgreed: form.timeCommitmentAgreed,
+        fullName: form.fullName, nim: form.nim, gpa: Number(form.gpa), phone: form.phone, lineId: form.lineId, campus: form.campus,
+        motivation: form.motivation, relevantSkills: form.relevantSkills, organizationalExperience: form.organizationalExperience || null, additionalNotes: form.additionalNotes || null,
+        divisionId: form.divisionId1, reason1: form.reason1, divisionId2: form.divisionId2, reason2: form.reason2, divisionId3: form.divisionId3, reason3: form.reason3,
+        portfolioUrl: form.portfolioUrl || null, cvUrl: form.cvUrl || null, linkedinUrl: form.linkedinUrl || null,
       })
       toast.success('Application submitted!')
       navigate('/dashboard')
@@ -86,24 +109,34 @@ export default function Apply() {
     }
   }
 
-  const DivisionSelect = ({ value, name, label, error, exclude = [] }) => (
-    <div>
-      <label className="block text-sm font-medium text-zinc-300 mb-1.5">{label}</label>
-      <select name={name} value={value} onChange={handleChange}
-        className="block w-full rounded-xl border border-zinc-700/60 bg-zinc-900/60 px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/10"
-      >
-        <option value="">Select division</option>
-        {commissions.map((comm) => (
-          <optgroup key={comm} label={`Komisi ${commissions.indexOf(comm) + 1} — ${comm}`}>
-            {divisions.filter((d) => d.commission === comm && !exclude.includes(d.id)).map((d) => (
-              <option key={d.id} value={d.id}>{d.name}</option>
+  const OptionRow = ({ label, name, placeholder, type, options, exclude = [] }) => {
+    const selected = [form.divisionId1, form.divisionId2, form.divisionId3]
+    return (
+      <div>
+        <label className="block text-sm font-medium text-zinc-300 mb-1.5">{label}</label>
+        {type === 'select' ? (
+          <select name={name} value={form[name]} onChange={handleChange}
+            className="block w-full rounded-xl border border-zinc-700/60 bg-zinc-900/60 px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/10"
+          >
+            <option value="">Select division</option>
+            {COMMISSIONS.map((comm) => (
+              <optgroup key={comm.id} label={`Komisi ${comm.id} — ${comm.name}`}>
+                {comm.divisions.filter((d) => !exclude.includes(d.id)).map((d) => (
+                  <option key={d.id} value={d.id} disabled={selected.includes(d.id)}>{d.name}</option>
+                ))}
+              </optgroup>
             ))}
-          </optgroup>
-        ))}
-      </select>
-      {error && <p className="text-xs text-red-400 mt-1">{error}</p>}
-    </div>
-  )
+          </select>
+        ) : (
+          <textarea name={name} value={form[name]} onChange={handleChange} placeholder={placeholder}
+            rows={3}
+            className="block w-full rounded-xl border border-zinc-700/60 bg-zinc-900/60 px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/10 resize-none"
+          />
+        )}
+        {errors[name] && <p className="text-xs text-red-400 mt-1">{errors[name]}</p>}
+      </div>
+    )
+  }
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><Spinner /></div>
 
@@ -111,21 +144,15 @@ export default function Apply() {
     return (
       <div className="min-h-screen relative flex items-center justify-center">
         <div className="relative z-10 max-w-md mx-auto px-4 text-center">
-          <Card className="p-10">
-            <div className="w-14 h-14 rounded-2xl bg-amber-500/10 flex items-center justify-center mx-auto mb-4">
-              <Building2 className="h-7 w-7 text-amber-300" />
-            </div>
-            <h2 className="text-xl font-bold text-white mb-2">Application Already Submitted</h2>
-            <p className="text-sm text-zinc-400 mb-6">
-              You already have a pending application for <strong className="text-zinc-200">{existing.division_name}</strong>.
-              Wait for admin review.
-            </p>
-            <Button onClick={() => navigate('/dashboard')}>View Status</Button>
-          </Card>
+          <Card className="p-10"><p className="text-white">Application already submitted. Wait for admin review.</p>
+            <Button className="mt-4" onClick={() => navigate('/dashboard')}>View Status</Button></Card>
         </div>
       </div>
     )
   }
+
+  const STEPS = ['Data Diri', 'Prioritas 1', 'Prioritas 2', 'Prioritas 3', 'Finalisasi']
+  const totalSteps = STEPS.length
 
   return (
     <div className="min-h-screen relative py-12">
@@ -136,49 +163,116 @@ export default function Apply() {
       <div className="relative z-10 max-w-2xl mx-auto px-4">
         <BackButton to="/dashboard" label="Back to Dashboard" />
 
-        <h1 className="text-2xl font-bold text-white mb-6">Apply to Join HIMTI</h1>
+        <h1 className="text-2xl font-bold text-white mb-2">Apply to Join HIMTI</h1>
+        <p className="text-sm text-zinc-500 mb-6">Step {step} of {totalSteps}: {STEPS[step - 1]}</p>
 
-        <Card className="p-7">
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Division priorities */}
+        {/* Step indicator */}
+        <div className="flex gap-1 mb-8">
+          {STEPS.map((_, i) => (
+            <div key={i} className={`flex-1 h-1 rounded-full transition-colors ${i < step ? 'bg-white' : 'bg-zinc-800'}`} />
+          ))}
+        </div>
+
+        <Card className="p-7 animate-fade-in" key={step}>
+          {step === 1 && (
             <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-white">Division Preferences</h3>
-              <DivisionSelect name="divisionId1" label="1st Priority" value={form.divisionId1} error={errors.divisionId1} />
-              <DivisionSelect name="divisionId2" label="2nd Priority (optional)" value={form.divisionId2} exclude={[form.divisionId1]} />
-              <DivisionSelect name="divisionId3" label="3rd Priority (optional)" value={form.divisionId3} exclude={[form.divisionId1, form.divisionId2]} />
-            </div>
-
-            {/* GPA */}
-            <Input label="GPA / IPK" name="gpa" type="number" step="0.01" min="0" max="4" placeholder="3.50" value={form.gpa} onChange={handleChange} error={errors.gpa} />
-
-            <Input label="Motivation" name="motivation" placeholder="Why do you want to join HIMTI? (min 20 chars)" value={form.motivation} onChange={handleChange} error={errors.motivation} />
-            <Input label="Reason for Joining" name="reasonForJoining" placeholder="Why HIMTI specifically? (min 20 chars)" value={form.reasonForJoining} onChange={handleChange} error={errors.reasonForJoining} />
-            <Input label="Relevant Skills" name="relevantSkills" placeholder="What skills can you contribute?" value={form.relevantSkills} onChange={handleChange} error={errors.relevantSkills} />
-            <Input label="Organizational Experience (optional)" name="organizationalExperience" placeholder="Previous org experience" value={form.organizationalExperience} onChange={handleChange} />
-
-            <div className="grid sm:grid-cols-3 gap-4">
-              <Input label="Portfolio URL (optional)" name="portfolioUrl" placeholder="https://" value={form.portfolioUrl} onChange={handleChange} />
-              <Input label="LinkedIn URL (optional)" name="linkedinUrl" placeholder="https://" value={form.linkedinUrl} onChange={handleChange} />
-              <Input label="GitHub URL (optional)" name="githubUrl" placeholder="https://" value={form.githubUrl} onChange={handleChange} />
-            </div>
-
-            <Input label="Additional Notes (optional)" name="additionalNotes" placeholder="Anything else?" value={form.additionalNotes} onChange={handleChange} />
-
-            <label className="flex items-start gap-3 cursor-pointer">
-              <input type="checkbox" name="timeCommitmentAgreed" checked={form.timeCommitmentAgreed} onChange={handleChange}
-                className="mt-1 h-4 w-4 rounded border-zinc-600 bg-zinc-800 accent-white" />
-              <div>
-                <span className="text-sm text-zinc-300">I confirm I can commit time to HIMTI activities</span>
-                {errors.timeCommitmentAgreed && <p className="text-xs text-red-400">{errors.timeCommitmentAgreed}</p>}
+              <h3 className="text-sm font-semibold text-white mb-3">Personal Data</h3>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <Input label="Full Name" name="fullName" value={form.fullName} onChange={handleChange} error={errors.fullName} />
+                <Input label="NIM" name="nim" value={form.nim} onChange={handleChange} error={errors.nim} />
               </div>
-            </label>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <Input label="GPA / IPK" name="gpa" type="number" step="0.01" min="0" max="4" placeholder="3.50" value={form.gpa} onChange={handleChange} error={errors.gpa} />
+                <Input label="Phone Number" name="phone" type="tel" placeholder="08123456789" value={form.phone} onChange={handleChange} error={errors.phone} />
+              </div>
+              <Input label="Line ID" name="lineId" placeholder="your_line_id" value={form.lineId} onChange={handleChange} error={errors.lineId} />
+              <div>
+                <label className="block text-sm font-medium text-zinc-300 mb-1.5">Campus Region</label>
+                <select name="campus" value={form.campus} onChange={handleChange}
+                  className="block w-full rounded-xl border border-zinc-700/60 bg-zinc-900/60 px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/10">
+                  <option value="">Select campus</option>
+                  {CAMPUSES.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+                {errors.campus && <p className="text-xs text-red-400 mt-1">{errors.campus}</p>}
+              </div>
+              <div className="pt-3 border-t border-white/[6%] space-y-4">
+                <Input label="Motivation for Joining HIMTI" name="motivation" placeholder="Why do you want to join HIMTI? (min 10 chars)" value={form.motivation} onChange={handleChange} error={errors.motivation} />
+                <Input label="Relevant Skills" name="relevantSkills" placeholder="What skills can you contribute?" value={form.relevantSkills} onChange={handleChange} error={errors.relevantSkills} />
+                <Input label="Organizational Experience (optional)" name="organizationalExperience" placeholder="Previous experience" value={form.organizationalExperience} onChange={handleChange} />
+                <Input label="Additional Notes (optional)" name="additionalNotes" placeholder="Anything else?" value={form.additionalNotes} onChange={handleChange} />
+              </div>
+            </div>
+          )}
 
-            <div className="pt-4 border-t border-white/[6%]">
-              <Button type="submit" className="w-full" loading={submitting}>
+          {step === 2 && (
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-white mb-3">1st Priority Division</h3>
+              <OptionRow label="Choose your top priority division" name="divisionId1" type="select" />
+              <OptionRow label="Why this division?" name="reason1" placeholder="Explain your interest (min 10 chars)" />
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-white mb-3">2nd Priority Division</h3>
+              <OptionRow label="Choose your second priority" name="divisionId2" type="select" exclude={[form.divisionId1]} />
+              <OptionRow label="Why this division?" name="reason2" placeholder="Explain your interest (min 10 chars)" />
+            </div>
+          )}
+
+          {step === 4 && (
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-white mb-3">3rd Priority Division</h3>
+              <OptionRow label="Choose your third priority" name="divisionId3" type="select" exclude={[form.divisionId1, form.divisionId2]} />
+              <OptionRow label="Why this division?" name="reason3" placeholder="Explain your interest (min 10 chars)" />
+            </div>
+          )}
+
+          {step === 5 && (
+            <div className="space-y-5">
+              <h3 className="text-sm font-semibold text-white mb-3">Links & Commitment</h3>
+              <Input label="Portfolio URL (optional)" name="portfolioUrl" placeholder="https://" value={form.portfolioUrl} onChange={handleChange} />
+              <Input label="CV URL (optional, Google Drive / Dropbox)" name="cvUrl" placeholder="https://" value={form.cvUrl} onChange={handleChange} />
+              <Input label="LinkedIn URL (optional)" name="linkedinUrl" placeholder="https://" value={form.linkedinUrl} onChange={handleChange} />
+
+              <div className="p-4 rounded-xl bg-zinc-800/40 border border-white/[6%]">
+                <label className="block text-sm font-medium text-zinc-300 mb-2">Upload Commitment Letter</label>
+                <p className="text-xs text-zinc-500 mb-3">
+                  Print this <a href="#" className="text-zinc-300 underline">commitment letter template</a>, affix a Rp5,000 stamp, sign,
+                  then upload the photo/scan here.
+                </p>
+                <label className="flex items-center gap-3 px-4 py-3 rounded-xl border border-dashed border-zinc-600 hover:border-white/30 cursor-pointer transition-colors">
+                  <Upload className="h-5 w-5 text-zinc-400" />
+                  <span className="text-sm text-zinc-400">{file ? file.name : 'Click to upload (PDF/JPG/PNG)'}</span>
+                  <input type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={handleFile} className="hidden" />
+                </label>
+              </div>
+
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input type="checkbox" name="commitmentAgreed" checked={form.commitmentAgreed} onChange={handleChange}
+                  className="mt-1 h-4 w-4 rounded border-zinc-600 bg-zinc-800 accent-white" />
+                <div>
+                  <span className="text-sm text-zinc-300">I confirm I can commit time to HIMTI activities</span>
+                  {errors.commitmentAgreed && <p className="text-xs text-red-400">{errors.commitmentAgreed}</p>}
+                </div>
+              </label>
+            </div>
+          )}
+
+          <div className="flex items-center justify-between pt-6 mt-6 border-t border-white/[6%]">
+            {step > 1 ? (
+              <Button variant="secondary" onClick={() => setStep((s) => s - 1)}>
+                <ChevronLeft className="h-4 w-4" /> Previous
+              </Button>
+            ) : <div />}
+            {step < totalSteps ? (
+              <Button onClick={handleNext}>Next <ChevronRight className="h-4 w-4" /></Button>
+            ) : (
+              <Button onClick={handleSubmit} loading={submitting}>
                 <Send className="h-4 w-4" /> Submit Application
               </Button>
-            </div>
-          </form>
+            )}
+          </div>
         </Card>
       </div>
     </div>

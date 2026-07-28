@@ -41,7 +41,7 @@ export default function Landing() {
         <section className="max-w-5xl mx-auto px-4 pt-28 pb-20 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[6%] border border-white/[8%] text-xs text-zinc-400 mb-10 animate-fade-in">
             <Sparkles className="h-3.5 w-3.5 text-zinc-300" />
-            HIMTI BINUS University — Since 2005
+            HIMTI BINUS University — One Family One Goal
           </div>
 
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight mb-10 min-h-[100px]">
@@ -89,7 +89,7 @@ export default function Landing() {
               <div className="mt-8 pt-6 border-t border-white/[6%]">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-zinc-500">Founded</span>
-                  <span className="text-white font-medium">2005</span>
+                  <span className="text-white font-medium">1992</span>
                 </div>
                 <div className="flex items-center justify-between text-sm mt-2">
                   <span className="text-zinc-500">Members</span>
@@ -162,7 +162,7 @@ export default function Landing() {
                 <div className="space-y-2.5 text-xs text-zinc-500">
                   <div className="flex items-center gap-2">
                     <Mail className="h-3.5 w-3.5 text-zinc-600 shrink-0" />
-                    himti@binus.ac.id
+                    mail@himti.or.id
                   </div>
                   <div className="flex items-center gap-2">
                     <MapPin className="h-3.5 w-3.5 text-zinc-600 shrink-0" />
@@ -176,8 +176,8 @@ export default function Landing() {
                 <h4 className="text-sm font-semibold text-white mb-4">Quick Links</h4>
                 <div className="space-y-2 text-xs">
                   <RouterLink to="/" className="block text-zinc-500 hover:text-white transition-colors">Home</RouterLink>
-                  <RouterLink to="/login" className="block text-zinc-500 hover:text-white transition-colors">Sign In</RouterLink>
                   <RouterLink to="/register" className="block text-zinc-500 hover:text-white transition-colors">Register</RouterLink>
+                  <RouterLink to="/login" className="block text-zinc-500 hover:text-white transition-colors">Sign In</RouterLink>
                   {isAuth && user?.role === 'admin' && (
                     <RouterLink to="/admin" className="block text-zinc-500 hover:text-white transition-colors">Admin</RouterLink>
                   )}
@@ -190,11 +190,31 @@ export default function Landing() {
                 <div className="flex flex-col gap-2">
                   <a href="https://instagram.com/himti_binus" target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors">
-                    <ExternalLink className="h-3.5 w-3.5 text-zinc-600 shrink-0" /> Instagram
+                    <ExternalLink className="h-3.5 w-3.5 text-zinc-600 shrink-0" /> Instagram @himti_binus
                   </a>
                   <a href="https://ofog.himtibinus.or.id/" target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors">
                     <ExternalLink className="h-3.5 w-3.5 text-zinc-600 shrink-0" /> Official Website
+                  </a>
+                  <a href="https://facebook.com/himtibinus" target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors">
+                    <ExternalLink className="h-3.5 w-3.5 text-zinc-600 shrink-0" /> Facebook
+                  </a>
+                  <a href="https://twitter.com/himtibinus" target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors">
+                    <ExternalLink className="h-3.5 w-3.5 text-zinc-600 shrink-0" /> Twitter
+                  </a>
+                  <a href="https://github.com/himtibinus" target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors">
+                    <ExternalLink className="h-3.5 w-3.5 text-zinc-600 shrink-0" /> GitHub
+                  </a>
+                  <a href="https://tiktok.com/@himti_binus" target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors">
+                    <ExternalLink className="h-3.5 w-3.5 text-zinc-600 shrink-0" /> TikTok @himti_binus
+                  </a>
+                  <a href="https://youtube.com/@himtibinus" target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors">
+                    <ExternalLink className="h-3.5 w-3.5 text-zinc-600 shrink-0" /> YouTube
                   </a>
                 </div>
               </div>
