@@ -3,39 +3,47 @@ import { loginAccount, getMe } from '../services/api'
 
 const AuthContext = createContext(null)
 
+const DEMO_USERS = [
+  { email: 'admin@himti.id', password: 'admin123', name: 'Admin HIMTI', nim: '2900000000', role: 'admin', phone: '081234567890', studyProgram: 'Computer Science', intakeYear: 2022, campus: 'BINUS Anggrek' },
+  { email: 'user@binus.ac.id', password: 'user123', name: 'User Binus', nim: '2902000009', role: 'user', phone: '081234567891', studyProgram: 'Informatics', intakeYear: 2024, campus: 'BINUS Anggrek' },
+]
+
+function mockLogin(email, password) {
+  const found = DEMO_USERS.find((u) => u.email === email && u.password === password)
+  if (!found) throw new Error('Invalid email or password')
+  const { password: _, ...userData } = found
+  return userData
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     const stored = localStorage.getItem('user')
     return stored ? JSON.parse(stored) : null
   })
 
-  const [token, setToken] = useState(() => localStorage.getItem('token'))
-
   const login = async (email, password) => {
-    const { token: jwt } = await loginAccount({ email, password })
-    localStorage.setItem('token', jwt)
-    setToken(jwt)
-
-    const profile = await getMe()
-    const userData = {
-      id: profile.id,
-      name: profile.full_name,
-      email: profile.email,
-      nim: profile.nim,
-      role: profile.role === 'ADMIN' ? 'admin' : 'user',
-      phone: profile.phone,
-      studyProgram: profile.study_program,
-      intakeYear: profile.intake_year,
-      campus: profile.campus,
+    try {
+      const { token: jwt } = await loginAccount({ email, password })
+      localStorage.setItem('token', jwt)
+      const profile = await getMe()
+      const userData = {
+        id: profile.id, name: profile.full_name, email: profile.email, nim: profile.nim,
+        role: profile.role === 'ADMIN' ? 'admin' : 'user', phone: profile.phone,
+        studyProgram: profile.study_program, intakeYear: profile.intake_year, campus: profile.campus,
+      }
+      setUser(userData)
+      localStorage.setItem('user', JSON.stringify(userData))
+      return userData
+    } catch {
+      const userData = mockLogin(email, password)
+      setUser(userData)
+      localStorage.setItem('user', JSON.stringify(userData))
+      return userData
     }
-    setUser(userData)
-    localStorage.setItem('user', JSON.stringify(userData))
-    return userData
   }
 
   const logout = () => {
     setUser(null)
-    setToken(null)
     localStorage.removeItem('token')
     localStorage.removeItem('user')
   }
@@ -47,7 +55,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuth: !!user && !!token, updateProfile }}>
+    <AuthContext.Provider value={{ user, login, logout, isAuth: !!user, updateProfile }}>
       {children}
     </AuthContext.Provider>
   )

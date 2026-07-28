@@ -1,7 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import Card from '../components/Card'
-import TypewriterText from '../components/TypewriterText'
 import AnimatedCounter from '../components/AnimatedCounter'
 import {
   Quote,
@@ -44,8 +43,12 @@ export default function Landing() {
             HIMTI BINUS University — Since 2005
           </div>
 
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight mb-6 animate-fade-in-up min-h-[120px] sm:min-h-[100px]">
-            <TypewriterText lines={['Where Technology Meets Opportunity.', 'Innovate, Integrate, Inspire.', 'Empowering the Next Generation of Tech Leaders.', 'Code the Future, Today.']} />
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight mb-6">
+            Where Technology
+            <br />
+            <span className="bg-gradient-to-r from-zinc-100 via-zinc-300 to-zinc-400 bg-clip-text text-transparent">
+              Meets Opportunity
+            </span>
           </h1>
 
           <p className="text-lg text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up stagger-1">
