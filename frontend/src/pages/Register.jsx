@@ -15,7 +15,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
     fullName: '', nim: '', email: '', phone: '', studyProgram: '',
-    intakeYear: '', campus: '', lineId: '', password: '', confirmPassword: '',
+    intakeYear: '', campus: '', instagramUsername: '', password: '', confirmPassword: '',
   })
   const [errors, setErrors] = useState({})
 
@@ -33,7 +33,6 @@ export default function Register() {
     if (!form.studyProgram.trim()) e.studyProgram = 'Study program is required'
     if (!form.intakeYear || isNaN(form.intakeYear)) e.intakeYear = 'Valid intake year required'
     if (!form.campus.trim()) e.campus = 'Campus is required'
-    if (!form.lineId.trim()) e.lineId = 'Line ID is required'
     if (form.password.length < 8) e.password = 'Password must be at least 8 characters'
     if (form.password !== form.confirmPassword) e.confirmPassword = 'Passwords do not match'
     return e
@@ -49,7 +48,7 @@ export default function Register() {
       await registerAccount({
         ...form,
         intakeYear: Number(form.intakeYear),
-        instagramUsername: null,
+        instagramUsername: form.instagramUsername || null,
       })
       toast.success('Account registered! Please sign in.')
       navigate('/login')
@@ -103,7 +102,7 @@ export default function Register() {
                 </select>
                 {errors.campus && <p className="text-xs text-red-400 mt-1">{errors.campus}</p>}
               </div>
-              <Input label="Line ID" name="lineId" placeholder="your_line_id" value={form.lineId} onChange={handleChange} error={errors.lineId} />
+              <Input label="Instagram (optional)" name="instagramUsername" placeholder="@username" value={form.instagramUsername} onChange={handleChange} />
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
               <Input label="Password" name="password" type="password" placeholder="Min 8 characters" value={form.password} onChange={handleChange} error={errors.password} />

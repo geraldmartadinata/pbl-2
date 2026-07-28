@@ -34,7 +34,7 @@ export default function Apply() {
     fullName: user?.name || '', nim: user?.nim || '', gpa: '', phone: user?.phone || '',
     lineId: '', campus: '', motivation: '', relevantSkills: '', organizationalExperience: '', additionalNotes: '',
     divisionId1: '', reason1: '', divisionId2: '', reason2: '', divisionId3: '', reason3: '',
-    portfolioUrl: '', cvUrl: '', linkedinUrl: '', commitmentAgreed: false,
+    portfolioUrl: '', cvUrl: '', linkedinUrl: '', githubUrl: '', commitmentAgreed: false,
   })
   const [errors, setErrors] = useState({})
 
@@ -95,10 +95,12 @@ export default function Apply() {
     setSubmitting(true)
     try {
       await submitApplication({
-        fullName: form.fullName, nim: form.nim, gpa: Number(form.gpa), phone: form.phone, lineId: form.lineId, campus: form.campus,
-        motivation: form.motivation, relevantSkills: form.relevantSkills, organizationalExperience: form.organizationalExperience || null, additionalNotes: form.additionalNotes || null,
-        divisionId: form.divisionId1, reason1: form.reason1, divisionId2: form.divisionId2, reason2: form.reason2, divisionId3: form.divisionId3, reason3: form.reason3,
-        portfolioUrl: form.portfolioUrl || null, cvUrl: form.cvUrl || null, linkedinUrl: form.linkedinUrl || null,
+        divisionId: form.divisionId1, motivation: form.motivation,
+        reasonForJoining: `1st: ${form.reason1}${form.divisionId2 ? `\n2nd: ${form.reason2}` : ''}${form.divisionId3 ? `\n3rd: ${form.reason3}` : ''}`,
+        relevantSkills: form.relevantSkills, organizationalExperience: form.organizationalExperience || null,
+        timeCommitmentAgreed: form.commitmentAgreed,
+        portfolioUrl: form.portfolioUrl || null, linkedinUrl: form.linkedinUrl || null, githubUrl: form.githubUrl || null,
+        additionalNotes: form.additionalNotes || null,
       })
       toast.success('Application submitted!')
       navigate('/dashboard')
@@ -234,6 +236,7 @@ export default function Apply() {
               <Input label="Portfolio URL (optional)" name="portfolioUrl" placeholder="https://" value={form.portfolioUrl} onChange={handleChange} />
               <Input label="CV URL (optional, Google Drive / Dropbox)" name="cvUrl" placeholder="https://" value={form.cvUrl} onChange={handleChange} />
               <Input label="LinkedIn URL (optional)" name="linkedinUrl" placeholder="https://" value={form.linkedinUrl} onChange={handleChange} />
+              <Input label="GitHub URL (optional)" name="githubUrl" placeholder="https://" value={form.githubUrl} onChange={handleChange} />
 
               <div className="p-4 rounded-xl bg-zinc-800/40 border border-white/[6%]">
                 <label className="block text-sm font-medium text-zinc-300 mb-2">Upload Commitment Letter</label>

@@ -177,36 +177,3 @@ export async function updateApplicationStatus(id, data) {
     { id, status: data.status, admin_note: data.adminNote || null, reviewed_at: new Date().toISOString() }
   )
 }
-
-// ── Events (mock only, legacy) ──
-
-import eventsMock from '../mocks/events.json'
-
-export async function getEvents() { await delay(); return [...eventsMock] }
-
-export async function getEventById(id) {
-  await delay()
-  const event = eventsMock.find((e) => e.id === id)
-  if (!event) throw new Error('Event not found')
-  return event
-}
-
-// ── Stubs ──
-
-import participantsMock from '../mocks/participants.json'
-let participants = [...participantsMock]
-
-export async function getAllParticipants() { await delay(); return [...participants] }
-
-export async function registerParticipant(data) {
-  await delay(700)
-  const newEntry = { id: participants.length + 1, ...data, registered_at: new Date().toISOString(), status: 'confirmed' }
-  participants.push(newEntry)
-  return newEntry
-}
-
-export async function toggleCheckIn(id) {
-  await delay(300)
-  participants = participants.map((p) => p.id === id ? { ...p, status: p.status === 'attended' ? 'confirmed' : 'attended' } : p)
-  return participants.find((p) => p.id === id)
-}
