@@ -4,9 +4,8 @@ import { ToastProvider } from './contexts/ToastContext'
 import Navbar from './components/Navbar'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
-import Registration from './pages/Registration'
-import Events from './pages/Events'
-import EventDetail from './pages/EventDetail'
+import Register from './pages/Register'
+import Apply from './pages/Apply'
 import AdminDashboard from './pages/AdminDashboard'
 import UserDashboard from './pages/UserDashboard'
 import Profile from './pages/Profile'
@@ -20,67 +19,18 @@ export default function App() {
         <ToastProvider>
         <Routes>
           {/* Public with Navbar */}
-          <Route
-            path="/"
-            element={
-              <>
-                <Navbar />
-                <Landing />
-              </>
-            }
-          />
-          <Route
-            path="/events"
-            element={
-              <>
-                <Navbar />
-                <Events />
-              </>
-            }
-          />
-          <Route
-            path="/events/:id"
-            element={
-              <>
-                <Navbar />
-                <EventDetail />
-              </>
-            }
-          />
-          <Route
-            path="/register/:id"
-            element={
-              <>
-                <Navbar />
-                <Registration />
-              </>
-            }
-          />
+          <Route path="/" element={<><Navbar /><Landing /></>} />
 
           {/* Standalone pages */}
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
           {/* Protected with Navbar */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Navbar />
-                <UserDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Navbar />
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/dashboard" element={<ProtectedRoute><Navbar /><UserDashboard /></ProtectedRoute>} />
+          <Route path="/apply" element={<ProtectedRoute><Navbar /><Apply /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Navbar /><Profile /></ProtectedRoute>} />
 
-          {/* Admin — top navbar + collapsible sidebar */}
+          {/* Admin */}
           <Route path="/admin" element={<ProtectedRoute adminOnly><Navbar /><AdminDashboard /></ProtectedRoute>} />
           <Route path="/admin/*" element={<ProtectedRoute adminOnly><Navbar /><AdminDashboard /></ProtectedRoute>} />
 

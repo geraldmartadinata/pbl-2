@@ -5,7 +5,6 @@ import {
   Menu,
   X,
   LayoutDashboard,
-  Calendar,
   ChevronDown,
   LogOut,
   User,
@@ -30,8 +29,7 @@ export default function Navbar() {
   }, [])
 
   const navLinks = [
-    { to: '/', label: 'Dashboard', icon: LayoutDashboard },
-    { to: '/events', label: 'Events', icon: Calendar },
+    { to: '/', label: 'Home', icon: LayoutDashboard },
   ]
 
   return (
