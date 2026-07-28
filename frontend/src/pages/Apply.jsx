@@ -8,7 +8,7 @@ import Input from '../components/Input'
 import Button from '../components/Button'
 import Spinner from '../components/Spinner'
 import BackButton from '../components/BackButton'
-import { Send, ChevronLeft, ChevronRight, Upload } from 'lucide-react'
+import { Send, ChevronLeft, ChevronRight, Upload, CheckCircle } from 'lucide-react'
 
 const CAMPUSES = ['BINUS Kemanggisan', 'BINUS Alam Sutra', 'BINUS Bekasi', 'BINUS Bandung', 'BINUS Semarang', 'BINUS Malang']
 
@@ -19,7 +19,45 @@ const COMMISSIONS = [
   { name: 'Resource & Development', id: 4, divisions: [{ id: 'div-7', name: 'Supervisor' }, { id: 'div-8', name: 'Human Resource Development' }] },
 ]
 
-const ALL_DIVISIONS = COMMISSIONS.flatMap((c) => c.divisions)
+function DivSelect({ value, name, label, error, form, handleChange, exclude = [] }) {
+  const selected = [form.divisionId1, form.divisionId2, form.divisionId3]
+  return (
+    <div>
+      <label className="block text-sm font-medium text-zinc-300 mb-1.5">{label}</label>
+      <select name={name} value={value} onChange={handleChange}
+        className="block w-full rounded-xl border border-zinc-700/60 bg-zinc-900/60 px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/10">
+        <option value="">Select division</option>
+        {COMMISSIONS.map((comm) => (
+          <optgroup key={comm.id} label={`Komisi ${comm.id} — ${comm.name}`}>
+            {comm.divisions.filter((d) => !exclude.includes(d.id)).map((d) => (
+              <option key={d.id} value={d.id} disabled={selected.includes(d.id)}>{d.name}</option>
+            ))}
+          </optgroup>
+        ))}
+      </select>
+      {error && <p className="text-xs text-red-400 mt-1">{error}</p>}
+    </div>
+  )
+}
+
+function TextArea({ label, name, value, error, placeholder, onChange }) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-zinc-300 mb-1.5">{label}</label>
+      <textarea name={name} value={value} onChange={onChange} placeholder={placeholder} rows={3}
+        className="block w-full rounded-xl border border-zinc-700/60 bg-zinc-900/60 px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/10 resize-none" />
+      {error && <p className="text-xs text-red-400 mt-1">{error}</p>}
+    </div>
+  )
+}
+
+function findDivName(id) {
+  for (const c of COMMISSIONS) {
+    const d = c.divisions.find((d) => d.id === id)
+    if (d) return d.name
+  }
+  return id
+}
 
 export default function Apply() {
   const navigate = useNavigate()
@@ -47,8 +85,8 @@ export default function Apply() {
 
   const handleChange = (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value
-    setForm({ ...form, [e.target.name]: value })
-    if (errors[e.target.name]) setErrors({ ...errors, [e.target.name]: '' })
+    setForm((prev) => ({ ...prev, [e.target.name]: value }))
+    if (errors[e.target.name]) setErrors((prev) => ({ ...prev, [e.target.name]: '' }))
   }
 
   const handleFile = (e) => {
@@ -111,35 +149,6 @@ export default function Apply() {
     }
   }
 
-  const OptionRow = ({ label, name, placeholder, type, options, exclude = [] }) => {
-    const selected = [form.divisionId1, form.divisionId2, form.divisionId3]
-    return (
-      <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-1.5">{label}</label>
-        {type === 'select' ? (
-          <select name={name} value={form[name]} onChange={handleChange}
-            className="block w-full rounded-xl border border-zinc-700/60 bg-zinc-900/60 px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/10"
-          >
-            <option value="">Select division</option>
-            {COMMISSIONS.map((comm) => (
-              <optgroup key={comm.id} label={`Komisi ${comm.id} — ${comm.name}`}>
-                {comm.divisions.filter((d) => !exclude.includes(d.id)).map((d) => (
-                  <option key={d.id} value={d.id} disabled={selected.includes(d.id)}>{d.name}</option>
-                ))}
-              </optgroup>
-            ))}
-          </select>
-        ) : (
-          <textarea name={name} value={form[name]} onChange={handleChange} placeholder={placeholder}
-            rows={3}
-            className="block w-full rounded-xl border border-zinc-700/60 bg-zinc-900/60 px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/10 resize-none"
-          />
-        )}
-        {errors[name] && <p className="text-xs text-red-400 mt-1">{errors[name]}</p>}
-      </div>
-    )
-  }
-
   if (loading) return <div className="min-h-screen flex items-center justify-center"><Spinner /></div>
 
   if (existing && existing.status === 'PENDING') {
@@ -168,7 +177,6 @@ export default function Apply() {
         <h1 className="text-2xl font-bold text-white mb-2">Apply to Join HIMTI</h1>
         <p className="text-sm text-zinc-500 mb-6">Step {step} of {totalSteps}: {STEPS[step - 1]}</p>
 
-        {/* Step indicator */}
         <div className="flex gap-1 mb-8">
           {STEPS.map((_, i) => (
             <div key={i} className={`flex-1 h-1 rounded-full transition-colors ${i < step ? 'bg-white' : 'bg-zinc-800'}`} />
@@ -209,40 +217,40 @@ export default function Apply() {
           {step === 2 && (
             <div className="space-y-4">
               <h3 className="text-sm font-semibold text-white mb-3">1st Priority Division</h3>
-              <OptionRow label="Choose your top priority division" name="divisionId1" type="select" />
-              <OptionRow label="Why this division?" name="reason1" placeholder="Explain your interest (min 10 chars)" />
+              <DivSelect label="Choose your top priority" name="divisionId1" value={form.divisionId1} error={errors.divisionId1} form={form} handleChange={handleChange} />
+              <TextArea label="Why this division?" name="reason1" value={form.reason1} error={errors.reason1} placeholder="Explain your interest (min 10 chars)" onChange={handleChange} />
             </div>
           )}
 
           {step === 3 && (
             <div className="space-y-4">
               <h3 className="text-sm font-semibold text-white mb-3">2nd Priority Division</h3>
-              <OptionRow label="Choose your second priority" name="divisionId2" type="select" exclude={[form.divisionId1]} />
-              <OptionRow label="Why this division?" name="reason2" placeholder="Explain your interest (min 10 chars)" />
+              <DivSelect label="Choose your second priority" name="divisionId2" value={form.divisionId2} error={errors.divisionId2} form={form} handleChange={handleChange} exclude={[form.divisionId1]} />
+              <TextArea label="Why this division?" name="reason2" value={form.reason2} error={errors.reason2} placeholder="Explain your interest (min 10 chars)" onChange={handleChange} />
             </div>
           )}
 
           {step === 4 && (
             <div className="space-y-4">
               <h3 className="text-sm font-semibold text-white mb-3">3rd Priority Division</h3>
-              <OptionRow label="Choose your third priority" name="divisionId3" type="select" exclude={[form.divisionId1, form.divisionId2]} />
-              <OptionRow label="Why this division?" name="reason3" placeholder="Explain your interest (min 10 chars)" />
+              <DivSelect label="Choose your third priority" name="divisionId3" value={form.divisionId3} error={errors.divisionId3} form={form} handleChange={handleChange} exclude={[form.divisionId1, form.divisionId2]} />
+              <TextArea label="Why this division?" name="reason3" value={form.reason3} error={errors.reason3} placeholder="Explain your interest (min 10 chars)" onChange={handleChange} />
             </div>
           )}
 
           {step === 5 && (
             <div className="space-y-5">
-              <h3 className="text-sm font-semibold text-white mb-3">Links & Commitment</h3>
+              <h3 className="text-sm font-semibold text-white mb-3">Links, Documents & Confirmation</h3>
+
               <Input label="Portfolio URL (optional)" name="portfolioUrl" placeholder="https://" value={form.portfolioUrl} onChange={handleChange} />
-              <Input label="CV URL (optional, Google Drive / Dropbox)" name="cvUrl" placeholder="https://" value={form.cvUrl} onChange={handleChange} />
+              <Input label="CV URL (Google Drive / Dropbox)" name="cvUrl" placeholder="https://" value={form.cvUrl} onChange={handleChange} />
               <Input label="LinkedIn URL (optional)" name="linkedinUrl" placeholder="https://" value={form.linkedinUrl} onChange={handleChange} />
               <Input label="GitHub URL (optional)" name="githubUrl" placeholder="https://" value={form.githubUrl} onChange={handleChange} />
 
               <div className="p-4 rounded-xl bg-zinc-800/40 border border-white/[6%]">
                 <label className="block text-sm font-medium text-zinc-300 mb-2">Upload Commitment Letter</label>
                 <p className="text-xs text-zinc-500 mb-3">
-                  Print this <a href="#" className="text-zinc-300 underline">commitment letter template</a>, affix a Rp5,000 stamp, sign,
-                  then upload the photo/scan here.
+                  Print the commitment letter template, affix a Rp5,000 stamp, sign, then upload the photo/scan here.
                 </p>
                 <label className="flex items-center gap-3 px-4 py-3 rounded-xl border border-dashed border-zinc-600 hover:border-white/30 cursor-pointer transition-colors">
                   <Upload className="h-5 w-5 text-zinc-400" />
@@ -251,11 +259,22 @@ export default function Apply() {
                 </label>
               </div>
 
+              {/* Division Summary */}
+              <div className="p-4 rounded-xl bg-zinc-800/40 border border-white/[6%]">
+                <h4 className="text-sm font-semibold text-white mb-3">Your Division Choices</h4>
+                <div className="space-y-2 text-sm">
+                  <p className="text-zinc-300">1st Priority: <strong className="text-white">{findDivName(form.divisionId1)}</strong></p>
+                  {form.divisionId2 && <p className="text-zinc-300">2nd Priority: <strong className="text-white">{findDivName(form.divisionId2)}</strong></p>}
+                  {form.divisionId3 && <p className="text-zinc-300">3rd Priority: <strong className="text-white">{findDivName(form.divisionId3)}</strong></p>}
+                </div>
+              </div>
+
+              {/* Commitment checkboxes */}
               <label className="flex items-start gap-3 cursor-pointer">
                 <input type="checkbox" name="commitmentAgreed" checked={form.commitmentAgreed} onChange={handleChange}
                   className="mt-1 h-4 w-4 rounded border-zinc-600 bg-zinc-800 accent-white" />
                 <div>
-                  <span className="text-sm text-zinc-300">I confirm I can commit time to HIMTI activities</span>
+                  <span className="text-sm text-zinc-300">I confirm my division choices above and <strong className="text-white">commit to contribute wholeheartedly</strong> if selected as a HIMTI activist.</span>
                   {errors.commitmentAgreed && <p className="text-xs text-red-400">{errors.commitmentAgreed}</p>}
                 </div>
               </label>
