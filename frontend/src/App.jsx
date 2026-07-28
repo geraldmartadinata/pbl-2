@@ -9,6 +9,7 @@ import Apply from './pages/Apply'
 import AdminDashboard from './pages/AdminDashboard'
 import UserDashboard from './pages/UserDashboard'
 import Profile from './pages/Profile'
+import FAQ from './pages/FAQ'
 import NotFound from './pages/NotFound'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/dashboard" element={<ProtectedRoute><Navbar /><UserDashboard /></ProtectedRoute>} />
           <Route path="/apply" element={<ProtectedRoute><Navbar /><Apply /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Navbar /><Profile /></ProtectedRoute>} />
+          <Route path="/faq" element={<><Navbar /><FAQ /></>} />
 
           {/* Admin */}
           <Route path="/admin" element={<ProtectedRoute adminOnly><Navbar /><AdminDashboard /></ProtectedRoute>} />

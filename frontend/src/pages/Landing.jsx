@@ -176,6 +176,7 @@ export default function Landing() {
                 <h4 className="text-sm font-semibold text-white mb-4">Quick Links</h4>
                 <div className="space-y-2 text-xs">
                   <RouterLink to="/" className="block text-zinc-500 hover:text-white transition-colors">Home</RouterLink>
+                  <RouterLink to="/faq" className="block text-zinc-500 hover:text-white transition-colors">FAQ</RouterLink>
                   <RouterLink to="/register" className="block text-zinc-500 hover:text-white transition-colors">Register</RouterLink>
                   <RouterLink to="/login" className="block text-zinc-500 hover:text-white transition-colors">Sign In</RouterLink>
                   {isAuth && user?.role === 'admin' && (
