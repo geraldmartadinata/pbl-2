@@ -155,7 +155,19 @@ export async function getAdminApplications(params = {}) {
 export async function getAdminApplicationDetail(id) {
   return orMock(
     async () => { const { data: res } = await client.get(`/admin/applications/${id}`); return res.data },
-    MOCK_APPLICATIONS.find((a) => a.application_id === id) || MOCK_APPLICATIONS[0]
+    () => {
+      const base = MOCK_APPLICATIONS.find((a) => a.application_id === id) || MOCK_APPLICATIONS[0]
+      return {
+        application_id: base.application_id, status: base.status, submitted_at: base.submitted_at, reviewed_at: base.status !== 'PENDING' ? '2026-07-25T10:00:00Z' : null,
+        full_name: base.full_name, nim: base.nim, email: base.email, phone: '08123456789', study_program: 'Computer Science', intake_year: 2024,
+        campus: 'BINUS Anggrek', instagram_username: '@' + base.full_name.toLowerCase().replace(/\s/g, '_'),
+        division_name: base.division_name, admin_note: base.status === 'REJECTED' ? 'Please try again next semester' : null,
+        motivation: 'I am passionate about technology and want to contribute to HIMTI\'s mission of bridging academic knowledge with industry practice.', reason_for_joining: 'HIMTI offers the best platform to develop both technical and leadership skills while building a strong network.',
+        relevant_skills: 'JavaScript, React, Node.js, UI/UX Design, Team Collaboration', organizational_experience: 'Former treasurer of high school programming club',
+        portfolio_url: 'https://github.com/' + base.full_name.toLowerCase().replace(/\s/g, ''), linkedin_url: 'https://linkedin.com/in/' + base.full_name.toLowerCase().replace(/\s/g, ''),
+        github_url: 'https://github.com/' + base.full_name.toLowerCase().replace(/\s/g, ''), additional_notes: null, user_id: 'mock-user-id', reviewer_name: null,
+      }
+    }
   )
 }
 
