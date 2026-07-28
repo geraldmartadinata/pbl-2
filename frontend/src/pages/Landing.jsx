@@ -1,6 +1,7 @@
 import { Link as RouterLink } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import Card from '../components/Card'
+import TypewriterText from '../components/TypewriterText'
 import AnimatedCounter from '../components/AnimatedCounter'
 import {
   Quote,
@@ -38,20 +39,16 @@ export default function Landing() {
       <div className="relative z-10">
         {/* ===== HERO ===== */}
         <section className="max-w-5xl mx-auto px-4 pt-28 pb-20 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[6%] border border-white/[8%] text-xs text-zinc-400 mb-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[6%] border border-white/[8%] text-xs text-zinc-400 mb-10 animate-fade-in">
             <Sparkles className="h-3.5 w-3.5 text-zinc-300" />
             HIMTI BINUS University — Since 2005
           </div>
 
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight mb-6">
-            Where Technology
-            <br />
-            <span className="bg-gradient-to-r from-zinc-100 via-zinc-300 to-zinc-400 bg-clip-text text-transparent">
-              Meets Opportunity
-            </span>
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight mb-10 min-h-[100px]">
+            <TypewriterText lines={['Ready to Build the Future?', 'Innovate, Integrate, Inspire.', 'Code the Future, Today.']} />
           </h1>
 
-          <p className="text-lg text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up stagger-1">
+          <p className="text-lg text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up">
             HIMTI is the official student body for Informatics Engineering at BINUS University.
             Join us to grow, network, and build your future in technology.
           </p>
@@ -191,13 +188,13 @@ export default function Landing() {
               <div>
                 <h4 className="text-sm font-semibold text-white mb-4">Follow Us</h4>
                 <div className="flex flex-col gap-2">
-                  <a href="https://instagram.com/himtibinus" target="_blank" rel="noopener noreferrer"
+                  <a href="https://instagram.com/himti_binus" target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors">
                     <ExternalLink className="h-3.5 w-3.5 text-zinc-600 shrink-0" /> Instagram
                   </a>
-                  <a href="https://linkedin.com/company/himtibinus" target="_blank" rel="noopener noreferrer"
+                  <a href="https://ofog.himtibinus.or.id/" target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors">
-                    <ExternalLink className="h-3.5 w-3.5 text-zinc-600 shrink-0" /> LinkedIn
+                    <ExternalLink className="h-3.5 w-3.5 text-zinc-600 shrink-0" /> Official Website
                   </a>
                 </div>
               </div>

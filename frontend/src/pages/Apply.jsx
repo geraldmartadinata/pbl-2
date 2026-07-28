@@ -18,7 +18,9 @@ export default function Apply() {
   const [submitting, setSubmitting] = useState(false)
   const [existing, setExisting] = useState(null)
   const [form, setForm] = useState({
-    divisionId: '', motivation: '', reasonForJoining: '', relevantSkills: '',
+    divisionId1: '', divisionId2: '', divisionId3: '',
+    gpa: '',
+    motivation: '', reasonForJoining: '', relevantSkills: '',
     organizationalExperience: '', portfolioUrl: '', linkedinUrl: '', githubUrl: '',
     additionalNotes: '', timeCommitmentAgreed: false,
   })
@@ -34,6 +36,8 @@ export default function Apply() {
       .finally(() => setLoading(false))
   }, [])
 
+  const commissions = [...new Set(divisions.map((d) => d.commission))]
+
   const handleChange = (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value
     setForm({ ...form, [e.target.name]: value })
@@ -42,7 +46,8 @@ export default function Apply() {
 
   const validate = () => {
     const e = {}
-    if (!form.divisionId) e.divisionId = 'Select a division'
+    if (!form.divisionId1) e.divisionId1 = 'Select your first choice'
+    if (!form.gpa || isNaN(form.gpa) || form.gpa < 0 || form.gpa > 4) e.gpa = 'Valid GPA (0-4) required'
     if (form.motivation.length < 20) e.motivation = 'At least 20 characters'
     if (form.reasonForJoining.length < 20) e.reasonForJoining = 'At least 20 characters'
     if (!form.relevantSkills.trim()) e.relevantSkills = 'Required'
@@ -58,12 +63,19 @@ export default function Apply() {
     setSubmitting(true)
     try {
       await submitApplication({
-        ...form,
+        divisionId: form.divisionId1,
+        divisionId2: form.divisionId2 || null,
+        divisionId3: form.divisionId3 || null,
+        gpa: Number(form.gpa),
+        motivation: form.motivation,
+        reasonForJoining: form.reasonForJoining,
+        relevantSkills: form.relevantSkills,
         organizationalExperience: form.organizationalExperience || null,
         portfolioUrl: form.portfolioUrl || null,
         linkedinUrl: form.linkedinUrl || null,
         githubUrl: form.githubUrl || null,
         additionalNotes: form.additionalNotes || null,
+        timeCommitmentAgreed: form.timeCommitmentAgreed,
       })
       toast.success('Application submitted!')
       navigate('/dashboard')
@@ -73,6 +85,25 @@ export default function Apply() {
       setSubmitting(false)
     }
   }
+
+  const DivisionSelect = ({ value, name, label, error, exclude = [] }) => (
+    <div>
+      <label className="block text-sm font-medium text-zinc-300 mb-1.5">{label}</label>
+      <select name={name} value={value} onChange={handleChange}
+        className="block w-full rounded-xl border border-zinc-700/60 bg-zinc-900/60 px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/10"
+      >
+        <option value="">Select division</option>
+        {commissions.map((comm) => (
+          <optgroup key={comm} label={`Komisi ${commissions.indexOf(comm) + 1} — ${comm}`}>
+            {divisions.filter((d) => d.commission === comm && !exclude.includes(d.id)).map((d) => (
+              <option key={d.id} value={d.id}>{d.name}</option>
+            ))}
+          </optgroup>
+        ))}
+      </select>
+      {error && <p className="text-xs text-red-400 mt-1">{error}</p>}
+    </div>
+  )
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><Spinner /></div>
 
@@ -109,26 +140,21 @@ export default function Apply() {
 
         <Card className="p-7">
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-1.5">Division</label>
-              <select
-                name="divisionId"
-                value={form.divisionId}
-                onChange={handleChange}
-                className="block w-full rounded-xl border border-zinc-700/60 bg-zinc-900/60 px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/10 focus:border-white/20"
-              >
-                <option value="">Select a division</option>
-                {divisions.map((d) => (
-                  <option key={d.id} value={d.id}>{d.name} — {d.description}</option>
-                ))}
-              </select>
-              {errors.divisionId && <p className="text-xs text-red-400 mt-1">{errors.divisionId}</p>}
+            {/* Division priorities */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-white">Division Preferences</h3>
+              <DivisionSelect name="divisionId1" label="1st Priority" value={form.divisionId1} error={errors.divisionId1} />
+              <DivisionSelect name="divisionId2" label="2nd Priority (optional)" value={form.divisionId2} exclude={[form.divisionId1]} />
+              <DivisionSelect name="divisionId3" label="3rd Priority (optional)" value={form.divisionId3} exclude={[form.divisionId1, form.divisionId2]} />
             </div>
 
-            <Input label="Motivation" name="motivation" placeholder="Why do you want to join this division? (min 20 chars)" value={form.motivation} onChange={handleChange} error={errors.motivation} />
-            <Input label="Reason for Joining HIMTI" name="reasonForJoining" placeholder="Why HIMTI? (min 20 chars)" value={form.reasonForJoining} onChange={handleChange} error={errors.reasonForJoining} />
+            {/* GPA */}
+            <Input label="GPA / IPK" name="gpa" type="number" step="0.01" min="0" max="4" placeholder="3.50" value={form.gpa} onChange={handleChange} error={errors.gpa} />
+
+            <Input label="Motivation" name="motivation" placeholder="Why do you want to join HIMTI? (min 20 chars)" value={form.motivation} onChange={handleChange} error={errors.motivation} />
+            <Input label="Reason for Joining" name="reasonForJoining" placeholder="Why HIMTI specifically? (min 20 chars)" value={form.reasonForJoining} onChange={handleChange} error={errors.reasonForJoining} />
             <Input label="Relevant Skills" name="relevantSkills" placeholder="What skills can you contribute?" value={form.relevantSkills} onChange={handleChange} error={errors.relevantSkills} />
-            <Input label="Organizational Experience (optional)" name="organizationalExperience" placeholder="Any previous org experience" value={form.organizationalExperience} onChange={handleChange} />
+            <Input label="Organizational Experience (optional)" name="organizationalExperience" placeholder="Previous org experience" value={form.organizationalExperience} onChange={handleChange} />
 
             <div className="grid sm:grid-cols-3 gap-4">
               <Input label="Portfolio URL (optional)" name="portfolioUrl" placeholder="https://" value={form.portfolioUrl} onChange={handleChange} />
@@ -139,13 +165,8 @@ export default function Apply() {
             <Input label="Additional Notes (optional)" name="additionalNotes" placeholder="Anything else?" value={form.additionalNotes} onChange={handleChange} />
 
             <label className="flex items-start gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                name="timeCommitmentAgreed"
-                checked={form.timeCommitmentAgreed}
-                onChange={handleChange}
-                className="mt-1 h-4 w-4 rounded border-zinc-600 bg-zinc-800 accent-white"
-              />
+              <input type="checkbox" name="timeCommitmentAgreed" checked={form.timeCommitmentAgreed} onChange={handleChange}
+                className="mt-1 h-4 w-4 rounded border-zinc-600 bg-zinc-800 accent-white" />
               <div>
                 <span className="text-sm text-zinc-300">I confirm I can commit time to HIMTI activities</span>
                 {errors.timeCommitmentAgreed && <p className="text-xs text-red-400">{errors.timeCommitmentAgreed}</p>}

@@ -19,11 +19,14 @@ client.interceptors.request.use((config) => {
 // ── Mock fallback data ──
 
 const MOCK_DIVISIONS = [
-  { id: 'div-1', name: 'Web Development', description: 'Build and maintain HIMTI websites' },
-  { id: 'div-2', name: 'Mobile Development', description: 'Create mobile applications' },
-  { id: 'div-3', name: 'UI/UX Design', description: 'Design user interfaces and experiences' },
-  { id: 'div-4', name: 'Data Science', description: 'Explore data and machine learning' },
-  { id: 'div-5', name: 'Cybersecurity', description: 'Secure systems and networks' },
+  { id: 'div-1', name: 'Responsi', commission: 'Education', commissionId: 1 },
+  { id: 'div-2', name: 'Academic Event', commission: 'Education', commissionId: 1 },
+  { id: 'div-3', name: 'Publication & Marketing', commission: 'Relation Expansion', commissionId: 2 },
+  { id: 'div-4', name: 'HIMTI Care', commission: 'Relation Expansion', commissionId: 2 },
+  { id: 'div-5', name: 'Web Development', commission: 'Research & Development', commissionId: 3 },
+  { id: 'div-6', name: 'Creative & Design', commission: 'Research & Development', commissionId: 3 },
+  { id: 'div-7', name: 'Supervisor', commission: 'Resource & Development', commissionId: 4 },
+  { id: 'div-8', name: 'Human Resource Development', commission: 'Resource & Development', commissionId: 4 },
 ]
 
 const MOCK_STATS = { totalApplications: 12, pendingApplications: 5, acceptedApplications: 5, rejectedApplications: 2 }
