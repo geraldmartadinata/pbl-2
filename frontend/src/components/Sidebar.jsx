@@ -5,17 +5,14 @@ import { cn } from '../utils/cn'
 import {
   LayoutDashboard,
   Users,
-  Calendar,
   LogOut,
-  ChevronLeft,
   PanelLeftClose,
   PanelLeft,
 } from 'lucide-react'
 
 const links = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
-  { to: '/admin/participants', label: 'Participants', icon: Users },
-  { to: '/admin/events', label: 'Events', icon: Calendar },
+  { to: '/admin/participants', label: 'Applications', icon: Users },
 ]
 
 export default function Sidebar() {

@@ -7,13 +7,15 @@ import Button from '../components/Button'
 import { useToast } from '../contexts/ToastContext'
 import { UserPlus, ArrowLeft } from 'lucide-react'
 
+const CAMPUSES = ['BINUS Kemanggisan', 'BINUS Alam Sutra', 'BINUS Bekasi', 'BINUS Bandung', 'BINUS Semarang', 'BINUS Malang']
+
 export default function Register() {
   const navigate = useNavigate()
   const toast = useToast()
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
     fullName: '', nim: '', email: '', phone: '', studyProgram: '',
-    intakeYear: '', campus: '', instagramUsername: '', password: '', confirmPassword: '',
+    intakeYear: '', campus: '', lineId: '', password: '', confirmPassword: '',
   })
   const [errors, setErrors] = useState({})
 
@@ -31,6 +33,7 @@ export default function Register() {
     if (!form.studyProgram.trim()) e.studyProgram = 'Study program is required'
     if (!form.intakeYear || isNaN(form.intakeYear)) e.intakeYear = 'Valid intake year required'
     if (!form.campus.trim()) e.campus = 'Campus is required'
+    if (!form.lineId.trim()) e.lineId = 'Line ID is required'
     if (form.password.length < 8) e.password = 'Password must be at least 8 characters'
     if (form.password !== form.confirmPassword) e.confirmPassword = 'Passwords do not match'
     return e
@@ -46,7 +49,7 @@ export default function Register() {
       await registerAccount({
         ...form,
         intakeYear: Number(form.intakeYear),
-        instagramUsername: form.instagramUsername || null,
+        instagramUsername: null,
       })
       toast.success('Account registered! Please sign in.')
       navigate('/login')
@@ -91,8 +94,16 @@ export default function Register() {
               <Input label="Intake Year" name="intakeYear" type="number" placeholder="2026" value={form.intakeYear} onChange={handleChange} error={errors.intakeYear} />
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
-              <Input label="Campus" name="campus" placeholder="BINUS Anggrek" value={form.campus} onChange={handleChange} error={errors.campus} />
-              <Input label="Instagram (optional)" name="instagramUsername" placeholder="@username" value={form.instagramUsername} onChange={handleChange} />
+              <div>
+                <label className="block text-sm font-medium text-zinc-300 mb-1.5">Campus</label>
+                <select name="campus" value={form.campus} onChange={handleChange}
+                  className="block w-full rounded-xl border border-zinc-700/60 bg-zinc-900/60 px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/10">
+                  <option value="">Select campus</option>
+                  {CAMPUSES.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+                {errors.campus && <p className="text-xs text-red-400 mt-1">{errors.campus}</p>}
+              </div>
+              <Input label="Line ID" name="lineId" placeholder="your_line_id" value={form.lineId} onChange={handleChange} error={errors.lineId} />
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
               <Input label="Password" name="password" type="password" placeholder="Min 8 characters" value={form.password} onChange={handleChange} error={errors.password} />
